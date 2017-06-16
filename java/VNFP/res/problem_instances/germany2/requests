@@ -1,0 +1,663 @@
+# Ingress-ID,    Egress-ID,       Min-Bandwidth (kbps), Max-Delay (μs),  VNF, VNF, VNF, ...
+Essen,           Duesseldorf,     34000,                10608,           NAT,Proxy
+Essen,           Koeln,           9000,                 16204,           Firewall,NAT,Proxy,IDS
+Essen,           Dortmund,        9000,                 7252,            Proxy,IDS,Firewall,NAT
+Essen,           Aachen,          2000,                 24772,           Proxy,Firewall,IDS,NAT
+Essen,           Muenster,        2000,                 27487,           Proxy,NAT,Firewall
+Essen,           Koblenz,         2000,                 32654,           NAT,Proxy
+Essen,           Siegen,          2000,                 14303,           Firewall,Proxy,NAT,IDS
+Essen,           Wesel,           2000,                 8801,            Proxy,IDS
+Essen,           Berlin,          2000,                 43435,           IDS,NAT,Proxy,Firewall
+Essen,           Leipzig,         2000,                 59698,           
+Essen,           Dresden,         2000,                 71563,           Proxy,Firewall
+Essen,           Erfurt,          2000,                 36036,           Proxy,NAT,Firewall,IDS
+Essen,           Chemnitz,        2000,                 45663,           
+Essen,           Schwerin,        2000,                 71826,           IDS,Firewall,Proxy
+Essen,           Magdeburg,       2000,                 32264,           Firewall
+Essen,           Hamburg,         2000,                 44196,           Firewall,IDS
+Essen,           Bremen,          2000,                 31247,           
+Essen,           Kiel,            2000,                 46263,           NAT,Firewall,IDS
+Essen,           Norden,          2000,                 15256,           Firewall
+Essen,           Hannover,        2000,                 40207,           Proxy,IDS
+Essen,           Bielefeld,       2000,                 44605,           Proxy
+Essen,           Osnabrueck,      2000,                 26627,           IDS
+Essen,           Frankfurt,       2000,                 62938,           Firewall,NAT
+Essen,           Darmstadt,       2000,                 67689,           Firewall
+Essen,           Mannheim,        2000,                 58913,           Proxy,IDS,Firewall
+Essen,           Saarbruecken,    2000,                 42943,           IDS,NAT,Firewall,Proxy
+Essen,           Stuttgart,       2000,                 56202,           IDS
+Essen,           Karlsruhe,       2000,                 46543,           IDS
+Essen,           Muenchen,        2000,                 73546,           IDS,Firewall
+Essen,           Augsburg,        2000,                 69206,           Proxy,NAT,Firewall
+Essen,           Nuernberg,       2000,                 60080,           Firewall,IDS
+Essen,           Wuerzburg,       2000,                 40908,           Proxy
+Duesseldorf,     Koeln,           76000,                22005,           Firewall,Proxy,NAT
+Duesseldorf,     Dortmund,        25000,                14210,           Proxy
+Duesseldorf,     Aachen,          3000,                 25472,           NAT,Firewall
+Duesseldorf,     Muenster,        6000,                 34715,           Firewall,NAT,IDS
+Duesseldorf,     Koblenz,         2000,                 55189,           Firewall,Proxy
+Duesseldorf,     Siegen,          2000,                 41847,           
+Duesseldorf,     Wesel,           5000,                 31862,           
+Duesseldorf,     Berlin,          4000,                 93383,           Firewall,Proxy,NAT,IDS
+Duesseldorf,     Leipzig,         2000,                 42960,           NAT,Firewall,Proxy,IDS
+Duesseldorf,     Dresden,         2000,                 69373,           Firewall
+Duesseldorf,     Erfurt,          2000,                 51990,           Proxy,NAT
+Duesseldorf,     Schwerin,        2000,                 106219,         
+Duesseldorf,     Magdeburg,       2000,                 39725,           Firewall,Proxy
+Duesseldorf,     Greifswald,      2000,                 91659,           NAT
+Duesseldorf,     Hamburg,         15000,                37530,           IDS,NAT
+Duesseldorf,     Bremen,          2000,                 50299,           IDS,Proxy
+Duesseldorf,     Kiel,            2000,                 66144,           IDS,Proxy,Firewall,NAT
+Duesseldorf,     Oldenburg,       2000,                 47478,           IDS
+Duesseldorf,     Flensburg,       2000,                 58678,           IDS,NAT
+Duesseldorf,     Bremerhaven,     2000,                 48806,           
+Duesseldorf,     Norden,          2000,                 47153,           
+Duesseldorf,     Hannover,        19000,                37045,           Proxy,NAT,IDS,Firewall
+Duesseldorf,     Bielefeld,       4000,                 46472,           IDS,NAT
+Duesseldorf,     Braunschweig,    2000,                 46166,           NAT,Proxy,Firewall
+Duesseldorf,     Osnabrueck,      2000,                 36751,           Firewall
+Duesseldorf,     Kassel,          2000,                 23434,           Proxy,IDS,Firewall,NAT
+Duesseldorf,     Frankfurt,       33000,                21879,           Firewall
+Duesseldorf,     Darmstadt,       2000,                 62430,           IDS,NAT
+Duesseldorf,     Mannheim,        2000,                 34592,           NAT
+Duesseldorf,     Giessen,         2000,                 54425,           IDS,NAT,Proxy,Firewall
+Duesseldorf,     Trier,           2000,                 33887,           IDS
+Duesseldorf,     Fulda,           2000,                 42864,           
+Duesseldorf,     Saarbruecken,    2000,                 50738,           Firewall,NAT,IDS,Proxy
+Duesseldorf,     Stuttgart,       5000,                 95353,           IDS
+Duesseldorf,     Karlsruhe,       2000,                 71495,           Firewall,IDS,Proxy
+Duesseldorf,     Ulm,             2000,                 95368,           IDS,NAT
+Duesseldorf,     Freiburg,        2000,                 68350,           
+Duesseldorf,     Muenchen,        4000,                 83350,           NAT,IDS,Proxy
+Duesseldorf,     Augsburg,        2000,                 77381,           Firewall
+Duesseldorf,     Nuernberg,       2000,                 51293,           IDS,Proxy,Firewall
+Duesseldorf,     Wuerzburg,       2000,                 67044,           Proxy,NAT
+Duesseldorf,     Regensburg,      2000,                 120693,          Firewall,Proxy,NAT
+Koeln,           Dortmund,        13000,                46936,           NAT,Firewall,Proxy
+Koeln,           Aachen,          10000,                56029,           Firewall
+Koeln,           Muenster,        2000,                 42180,           IDS,Firewall,Proxy
+Koeln,           Koblenz,         5000,                 33302,           NAT,IDS,Firewall
+Koeln,           Siegen,          4000,                 32244,           NAT
+Koeln,           Wesel,           2000,                 17859,           
+Koeln,           Berlin,          11000,                91994,           
+Koeln,           Leipzig,         3000,                 65031,           Proxy,IDS
+Koeln,           Dresden,         2000,                 66449,           Proxy,Firewall
+Koeln,           Erfurt,          2000,                 62931,           Proxy,Firewall,IDS,NAT
+Koeln,           Chemnitz,        2000,                 47067,           NAT,IDS,Proxy,Firewall
+Koeln,           Schwerin,        2000,                 100840,          Proxy,NAT,IDS
+Koeln,           Magdeburg,       2000,                 46369,           
+Koeln,           Hamburg,         5000,                 47283,           NAT,IDS,Firewall,Proxy
+Koeln,           Bremen,          2000,                 54304,           Firewall,Proxy
+Koeln,           Kiel,            2000,                 100923,          NAT,Firewall
+Koeln,           Oldenburg,       2000,                 36709,           Proxy,Firewall,NAT,IDS
+Koeln,           Bremerhaven,     2000,                 68675,           NAT,Proxy,Firewall
+Koeln,           Norden,          2000,                 40488,           Firewall
+Koeln,           Hannover,        12000,                77832,           Firewall,IDS,NAT,Proxy
+Koeln,           Bielefeld,       2000,                 38646,           Proxy
+Koeln,           Braunschweig,    2000,                 79982,           Firewall,Proxy
+Koeln,           Osnabrueck,      2000,                 51800,           Proxy,Firewall
+Koeln,           Kassel,          2000,                 45929,           Firewall,Proxy,NAT
+Koeln,           Frankfurt,       28000,                19457,           Proxy,NAT
+Koeln,           Darmstadt,       2000,                 21518,           NAT
+Koeln,           Mannheim,        2000,                 65474,           
+Koeln,           Kaiserslautern,  2000,                 34756,           NAT,Proxy
+Koeln,           Giessen,         2000,                 47571,           Firewall,IDS,NAT
+Koeln,           Trier,           5000,                 47437,           NAT,IDS,Firewall,Proxy
+Koeln,           Fulda,           2000,                 29621,           NAT,Firewall,IDS
+Koeln,           Saarbruecken,    2000,                 84479,           Firewall
+Koeln,           Stuttgart,       7000,                 41167,           Firewall,Proxy
+Koeln,           Karlsruhe,       2000,                 66067,           NAT,Proxy,Firewall,IDS
+Koeln,           Ulm,             2000,                 50008,           IDS,Firewall,NAT,Proxy
+Koeln,           Konstanz,        2000,                 86715,           Firewall,Proxy,NAT
+Koeln,           Freiburg,        2000,                 86894,           NAT
+Koeln,           Muenchen,        3000,                 45267,           NAT,Proxy,Firewall
+Koeln,           Augsburg,        2000,                 70017,           Firewall,NAT
+Koeln,           Kempten,         2000,                 70149,           Proxy,Firewall,IDS,NAT
+Koeln,           Nuernberg,       3000,                 70812,           
+Koeln,           Bayreuth,        2000,                 56403,           IDS,Firewall,Proxy,NAT
+Koeln,           Wuerzburg,       2000,                 46390,           Proxy,Firewall
+Koeln,           Regensburg,      2000,                 61960,           IDS
+Dortmund,        Aachen,          2000,                 40785,           NAT,Firewall,Proxy
+Dortmund,        Muenster,        6000,                 47816,           Proxy
+Dortmund,        Koblenz,         2000,                 57059,           IDS,Proxy,NAT
+Dortmund,        Siegen,          5000,                 15373,           
+Dortmund,        Wesel,           2000,                 28614,           IDS
+Dortmund,        Berlin,          2000,                 50191,           Firewall,NAT,IDS,Proxy
+Dortmund,        Leipzig,         5000,                 46820,           NAT
+Dortmund,        Dresden,         2000,                 62032,           IDS,Firewall,NAT,Proxy
+Dortmund,        Erfurt,          2000,                 52568,           Proxy,IDS
+Dortmund,        Chemnitz,        2000,                 83618,           Firewall
+Dortmund,        Schwerin,        2000,                 67382,           IDS,NAT,Firewall
+Dortmund,        Magdeburg,       2000,                 57367,           IDS
+Dortmund,        Greifswald,      2000,                 80441,           IDS,NAT,Firewall,Proxy
+Dortmund,        Hamburg,         3000,                 31343,           Proxy,IDS,Firewall
+Dortmund,        Bremen,          2000,                 31129,           NAT,IDS,Proxy
+Dortmund,        Kiel,            2000,                 58205,           Proxy
+Dortmund,        Oldenburg,       2000,                 43807,           
+Dortmund,        Flensburg,       2000,                 56980,           Firewall,NAT,Proxy
+Dortmund,        Bremerhaven,     2000,                 84232,           
+Dortmund,        Norden,          2000,                 30156,           Firewall,Proxy
+Dortmund,        Hannover,        15000,                35323,           
+Dortmund,        Bielefeld,       8000,                 25615,           
+Dortmund,        Braunschweig,    2000,                 32618,           
+Dortmund,        Osnabrueck,      2000,                 41877,           NAT,Proxy,Firewall,IDS
+Dortmund,        Kassel,          2000,                 46747,           Firewall
+Dortmund,        Frankfurt,       6000,                 35724,           Proxy,IDS
+Dortmund,        Darmstadt,       2000,                 57488,           IDS,Firewall,Proxy,NAT
+Dortmund,        Mannheim,        2000,                 57724,           Firewall,Proxy,NAT
+Dortmund,        Giessen,         2000,                 33953,           
+Dortmund,        Fulda,           2000,                 27730,           
+Dortmund,        Saarbruecken,    2000,                 60986,           Proxy,NAT
+Dortmund,        Stuttgart,       2000,                 87467,           Proxy,NAT
+Dortmund,        Karlsruhe,       2000,                 87454,           NAT,IDS,Firewall,Proxy
+Dortmund,        Ulm,             2000,                 120674,          Firewall
+Dortmund,        Freiburg,        2000,                 82859,           Firewall
+Dortmund,        Muenchen,        2000,                 38745,           Firewall,Proxy
+Dortmund,        Augsburg,        2000,                 68193,           
+Dortmund,        Nuernberg,       2000,                 86128,           NAT,Firewall
+Dortmund,        Wuerzburg,       2000,                 65071,           Proxy,NAT,IDS,Firewall
+Aachen,          Muenster,        2000,                 63142,           Firewall
+Aachen,          Koblenz,         2000,                 56824,           Proxy,Firewall,IDS,NAT
+Aachen,          Wesel,           2000,                 22448,           NAT
+Aachen,          Berlin,          2000,                 52650,           Firewall,IDS,Proxy
+Aachen,          Dresden,         2000,                 51499,           
+Aachen,          Erfurt,          2000,                 55901,           NAT,IDS,Proxy
+Aachen,          Hamburg,         2000,                 65411,           
+Aachen,          Bremerhaven,     2000,                 79679,           Firewall,IDS,NAT,Proxy
+Aachen,          Norden,          2000,                 29044,           IDS
+Aachen,          Osnabrueck,      2000,                 40087,           Firewall,NAT,Proxy
+Aachen,          Frankfurt,       3000,                 41987,           Proxy,IDS,Firewall
+Aachen,          Kaiserslautern,  2000,                 33827,           
+Aachen,          Trier,           2000,                 80970,           NAT,IDS,Proxy
+Aachen,          Fulda,           2000,                 48482,           
+Aachen,          Saarbruecken,    2000,                 58835,           IDS,Firewall
+Aachen,          Konstanz,        2000,                 118717,          Firewall,NAT
+Aachen,          Freiburg,        3000,                 113710,          Firewall,NAT
+Aachen,          Nuernberg,       2000,                 90508,           Proxy,Firewall,IDS,NAT
+Muenster,        Siegen,          2000,                 65448,           NAT,Firewall
+Muenster,        Wesel,           2000,                 46563,           IDS
+Muenster,        Berlin,          2000,                 55144,           Firewall,NAT
+Muenster,        Schwerin,        2000,                 52607,           NAT,Proxy,IDS
+Muenster,        Hamburg,         2000,                 42033,           
+Muenster,        Bremen,          2000,                 51524,           NAT
+Muenster,        Bremerhaven,     2000,                 29778,           
+Muenster,        Norden,          2000,                 61457,           NAT,Firewall,Proxy
+Muenster,        Hannover,        2000,                 62793,           IDS
+Muenster,        Bielefeld,       5000,                 40275,           NAT,Firewall,IDS,Proxy
+Muenster,        Osnabrueck,      2000,                 8387,             
+Muenster,        Kassel,          3000,                 40172,           IDS,Firewall
+Muenster,        Frankfurt,       3000,                 35462,           IDS,Proxy
+Muenster,        Fulda,           2000,                 35638,           IDS
+Muenster,        Konstanz,        2000,                 112663,          NAT,Proxy,IDS
+Muenster,        Nuernberg,       2000,                 56421,           
+Koblenz,         Siegen,          2000,                 45142,           Proxy,Firewall,IDS
+Koblenz,         Berlin,          2000,                 101438,          NAT
+Koblenz,         Dresden,         2000,                 80344,           Proxy,Firewall
+Koblenz,         Hamburg,         2000,                 39653,           Proxy,NAT
+Koblenz,         Bremerhaven,     2000,                 49491,           
+Koblenz,         Norden,          2000,                 57034,           IDS
+Koblenz,         Bielefeld,       2000,                 44926,           Firewall,Proxy,NAT,IDS
+Koblenz,         Osnabrueck,      2000,                 48592,           IDS
+Koblenz,         Kassel,          2000,                 52410,           Firewall,IDS
+Koblenz,         Frankfurt,       2000,                 15362,           IDS,Proxy
+Koblenz,         Darmstadt,       6000,                 24921,           
+Koblenz,         Mannheim,        2000,                 36294,           Proxy,Firewall,NAT
+Koblenz,         Kaiserslautern,  2000,                 23603,           NAT
+Koblenz,         Giessen,         2000,                 16703,           NAT
+Koblenz,         Trier,           2000,                 8296,            
+Koblenz,         Fulda,           2000,                 16272,           Proxy
+Koblenz,         Saarbruecken,    2000,                 30398,           NAT
+Koblenz,         Konstanz,        2000,                 53481,           IDS,NAT
+Koblenz,         Wuerzburg,       2000,                 39463,           Firewall,IDS,Proxy
+Siegen,          Berlin,          2000,                 39459,           Proxy,NAT,IDS
+Siegen,          Hamburg,         2000,                 48468,           IDS,Proxy,Firewall
+Siegen,          Bremerhaven,     2000,                 68262,           NAT,Proxy,Firewall,IDS
+Siegen,          Osnabrueck,      2000,                 57276,           Firewall
+Siegen,          Frankfurt,       2000,                 16065,           Firewall,Proxy
+Siegen,          Mannheim,        2000,                 30752,           
+Siegen,          Giessen,         2000,                 48251,           Proxy,IDS,Firewall
+Siegen,          Fulda,           2000,                 29970,           
+Siegen,          Saarbruecken,    2000,                 51925,           IDS,NAT
+Siegen,          Konstanz,        2000,                 89457,           NAT
+Siegen,          Nuernberg,       2000,                 83768,           IDS,Firewall,Proxy
+Wesel,           Berlin,          2000,                 74662,           Firewall,NAT,Proxy
+Wesel,           Hamburg,         2000,                 52264,           Proxy,NAT
+Wesel,           Bremerhaven,     2000,                 83426,           IDS
+Wesel,           Norden,          2000,                 52798,           NAT
+Wesel,           Bielefeld,       2000,                 44465,           Proxy,Firewall,NAT
+Wesel,           Osnabrueck,      2000,                 28416,           
+Wesel,           Frankfurt,       2000,                 30972,           Firewall,IDS,NAT,Proxy
+Wesel,           Fulda,           2000,                 46603,           
+Wesel,           Saarbruecken,    2000,                 76961,           Proxy
+Wesel,           Konstanz,        2000,                 80748,           Proxy,Firewall,IDS,NAT
+Berlin,          Leipzig,         20000,                16332,           NAT,Proxy,Firewall,IDS
+Berlin,          Dresden,         11000,                29155,           Firewall,NAT,IDS
+Berlin,          Erfurt,          3000,                 25883,           Firewall,IDS,NAT,Proxy
+Berlin,          Chemnitz,        2000,                 25947,           Proxy,Firewall,NAT
+Berlin,          Schwerin,        3000,                 48056,           IDS,Proxy,NAT,Firewall
+Berlin,          Magdeburg,       7000,                 15273,           NAT,Proxy
+Berlin,          Greifswald,      4000,                 44816,           NAT,Proxy,Firewall,IDS
+Berlin,          Hamburg,         23000,                17159,           
+Berlin,          Bremen,          2000,                 53734,           IDS,NAT
+Berlin,          Kiel,            2000,                 51561,           Proxy,IDS
+Berlin,          Oldenburg,       2000,                 85533,           IDS
+Berlin,          Bremerhaven,     2000,                 65264,           
+Berlin,          Hannover,        25000,                44503,           
+Berlin,          Bielefeld,       2000,                 56400,           NAT
+Berlin,          Braunschweig,    2000,                 24004,           IDS,Proxy,Firewall
+Berlin,          Osnabrueck,      2000,                 66130,           
+Berlin,          Kassel,          2000,                 23788,           IDS
+Berlin,          Frankfurt,       16000,                84244,           NAT
+Berlin,          Darmstadt,       2000,                 91713,           NAT,IDS,Proxy,Firewall
+Berlin,          Mannheim,        2000,                 71251,            
+Berlin,          Kaiserslautern,  2000,                 45147,           Firewall,NAT,IDS,Proxy
+Berlin,          Giessen,         2000,                 41170,           NAT
+Berlin,          Trier,           2000,                 81691,           NAT,IDS,Proxy
+Berlin,          Fulda,           2000,                 46856,           
+Berlin,          Saarbruecken,    2000,                 78704,           Proxy,IDS,NAT
+Berlin,          Stuttgart,       3000,                 58277,           
+Berlin,          Karlsruhe,       2000,                 59528,           Proxy,Firewall,IDS,NAT
+Berlin,          Ulm,             2000,                 82603,           Proxy
+Berlin,          Konstanz,        2000,                 69636,           Proxy
+Berlin,          Freiburg,        2000,                 58467,           NAT,IDS,Proxy,Firewall
+Berlin,          Muenchen,        4000,                 38050,           IDS
+Berlin,          Augsburg,        2000,                 42596,           NAT,Firewall
+Berlin,          Passau,          2000,                 44824,           NAT,Firewall,Proxy,IDS
+Berlin,          Nuernberg,       3000,                 22742,           NAT,IDS,Proxy,Firewall
+Berlin,          Bayreuth,        2000,                 22760,           Firewall,NAT
+Berlin,          Wuerzburg,       2000,                 44960,           
+Leipzig,         Dresden,         10000,                17230,           Firewall,Proxy
+Leipzig,         Erfurt,          11000,                17034,           Firewall,Proxy,IDS,NAT
+Leipzig,         Chemnitz,        3000,                 32391,           IDS
+Leipzig,         Schwerin,        2000,                 18014,           IDS,NAT
+Leipzig,         Magdeburg,       6000,                 7507,            Firewall,IDS
+Leipzig,         Greifswald,      2000,                 27621,           Firewall,IDS,NAT,Proxy
+Leipzig,         Hamburg,         17000,                35362,           Proxy,Firewall
+Leipzig,         Hannover,        3000,                 31246,           IDS
+Leipzig,         Bielefeld,       2000,                 44714,           Proxy,IDS,Firewall
+Leipzig,         Braunschweig,    2000,                 15856,           Firewall,IDS,NAT
+Leipzig,         Frankfurt,       4000,                 47316,           
+Leipzig,         Darmstadt,       2000,                 42177,           Proxy,Firewall,IDS
+Leipzig,         Mannheim,        2000,                 65181,           Firewall,NAT,IDS
+Leipzig,         Stuttgart,       2000,                 30772,           NAT,IDS,Firewall
+Leipzig,         Karlsruhe,       2000,                 64607,           IDS,NAT
+Leipzig,         Ulm,             2000,                 32632,           NAT
+Leipzig,         Muenchen,        3000,                 49236,           NAT,IDS,Proxy
+Leipzig,         Augsburg,        2000,                 36022,           
+Leipzig,         Nuernberg,       9000,                 26857,           IDS,Proxy,NAT
+Leipzig,         Wuerzburg,       2000,                 19052,           Proxy,Firewall,NAT,IDS
+Dresden,         Erfurt,          2000,                 33354,           NAT,IDS,Proxy
+Dresden,         Chemnitz,        4000,                 44353,           NAT,Firewall
+Dresden,         Schwerin,        2000,                 53067,           Proxy,Firewall
+Dresden,         Magdeburg,       2000,                 34175,           
+Dresden,         Greifswald,      2000,                 24037,           Firewall,IDS,NAT,Proxy
+Dresden,         Hamburg,         2000,                 30123,           Firewall
+Dresden,         Bremen,          2000,                 74885,           IDS,Proxy,Firewall
+Dresden,         Kiel,            2000,                 60941,           IDS,Proxy,Firewall,NAT
+Dresden,         Norden,          2000,                 107237,          NAT,Firewall,IDS
+Dresden,         Hannover,        2000,                 36879,           Firewall
+Dresden,         Bielefeld,       2000,                 67792,           IDS
+Dresden,         Braunschweig,    2000,                 48566,           Firewall,IDS,Proxy,NAT
+Dresden,         Kassel,          2000,                 38968,           
+Dresden,         Frankfurt,       2000,                 63967,           Proxy,Firewall,NAT
+Dresden,         Darmstadt,       2000,                 71466,           Firewall,NAT,Proxy
+Dresden,         Mannheim,        2000,                 68693,           Proxy,Firewall
+Dresden,         Trier,           2000,                 56410,           IDS,Proxy,Firewall,NAT
+Dresden,         Stuttgart,       2000,                 35277,           NAT,IDS,Firewall
+Dresden,         Karlsruhe,       2000,                 65479,           Firewall
+Dresden,         Ulm,             2000,                 43989,           IDS,Firewall,Proxy,NAT
+Dresden,         Konstanz,        2000,                 40507,           IDS,Firewall
+Dresden,         Freiburg,        2000,                 62277,           NAT,IDS,Firewall,Proxy
+Dresden,         Muenchen,        2000,                 63283,           IDS
+Dresden,         Augsburg,        2000,                 27595,           
+Dresden,         Nuernberg,       2000,                 30913,           Proxy,NAT,IDS,Firewall
+Dresden,         Bayreuth,        2000,                 19431,           IDS,NAT
+Dresden,         Wuerzburg,       2000,                 27047,           Firewall,IDS
+Dresden,         Regensburg,      2000,                 60945,           Proxy,NAT,Firewall,IDS
+Erfurt,          Chemnitz,        2000,                 16256,           
+Erfurt,          Schwerin,        2000,                 24894,           
+Erfurt,          Magdeburg,       6000,                 22445,           Proxy
+Erfurt,          Hamburg,         2000,                 51589,           IDS,Proxy,NAT
+Erfurt,          Bremen,          2000,                 68250,           IDS,Proxy
+Erfurt,          Kiel,            2000,                 37136,           Firewall,NAT,Proxy,IDS
+Erfurt,          Hannover,        2000,                 59026,           Firewall
+Erfurt,          Bielefeld,       2000,                 40862,           IDS,Proxy
+Erfurt,          Braunschweig,    2000,                 42657,           NAT
+Erfurt,          Kassel,          2000,                 16049,           
+Erfurt,          Frankfurt,       5000,                 40302,           
+Erfurt,          Darmstadt,       2000,                 28301,           Firewall,NAT
+Erfurt,          Mannheim,        2000,                 68077,           
+Erfurt,          Giessen,         2000,                 66874,           Proxy
+Erfurt,          Fulda,           2000,                 31575,           Proxy,NAT,IDS,Firewall
+Erfurt,          Stuttgart,       2000,                 62701,           NAT,Proxy
+Erfurt,          Karlsruhe,       2000,                 60638,           NAT,Firewall,Proxy,IDS
+Erfurt,          Muenchen,        2000,                 25767,           Proxy,NAT,IDS
+Erfurt,          Augsburg,        2000,                 24387,           
+Erfurt,          Nuernberg,       2000,                 25145,           NAT,IDS,Firewall,Proxy
+Erfurt,          Bayreuth,        2000,                 21622,           
+Erfurt,          Wuerzburg,       2000,                 26368,           Proxy,Firewall,IDS,NAT
+Chemnitz,        Schwerin,        2000,                 36978,           IDS,NAT,Firewall
+Chemnitz,        Magdeburg,       2000,                 50827,           Proxy,IDS
+Chemnitz,        Hamburg,         2000,                 61260,           Proxy
+Chemnitz,        Hannover,        2000,                 66574,           IDS,Firewall
+Chemnitz,        Bielefeld,       2000,                 44650,           Proxy,IDS,Firewall,NAT
+Chemnitz,        Braunschweig,    2000,                 69663,           NAT,Firewall
+Chemnitz,        Frankfurt,       2000,                 43800,           Proxy,IDS
+Chemnitz,        Mannheim,        2000,                 88887,           NAT
+Chemnitz,        Giessen,         2000,                 75268,           NAT,Firewall,Proxy,IDS
+Chemnitz,        Stuttgart,       2000,                 71918,           NAT,Proxy,IDS
+Chemnitz,        Karlsruhe,       2000,                 33760,           
+Chemnitz,        Muenchen,        2000,                 24436,           Proxy
+Chemnitz,        Augsburg,        2000,                 63535,           IDS,NAT,Proxy,Firewall
+Chemnitz,        Nuernberg,       2000,                 24387,           
+Chemnitz,        Bayreuth,        2000,                 48188,           Proxy
+Chemnitz,        Wuerzburg,       2000,                 18807,           
+Schwerin,        Magdeburg,       2000,                 43483,           NAT
+Schwerin,        Greifswald,      2000,                 53793,           Proxy,Firewall,NAT,IDS
+Schwerin,        Hamburg,         8000,                 14852,           Proxy,Firewall
+Schwerin,        Bremen,          2000,                 27511,           Proxy,NAT,Firewall
+Schwerin,        Kiel,            3000,                 13761,           
+Schwerin,        Hannover,        2000,                 23512,           IDS,Firewall
+Schwerin,        Bielefeld,       2000,                 52404,           NAT
+Schwerin,        Frankfurt,       2000,                 62972,           Proxy,Firewall,IDS,NAT
+Schwerin,        Mannheim,        2000,                 122085,         
+Schwerin,        Stuttgart,       2000,                 44141,           Proxy
+Schwerin,        Karlsruhe,       2000,                 109782,          
+Schwerin,        Muenchen,        2000,                 40660,           Firewall,Proxy,NAT
+Schwerin,        Augsburg,        2000,                 69677,           NAT,IDS,Proxy
+Schwerin,        Nuernberg,       2000,                 48733,           IDS
+Schwerin,        Wuerzburg,       2000,                 68831,           Firewall,Proxy
+Magdeburg,       Greifswald,      2000,                 48451,           Firewall,Proxy,NAT,IDS
+Magdeburg,       Hamburg,         2000,                 33934,           Firewall,Proxy,IDS
+Magdeburg,       Bremen,          2000,                 52424,           Firewall,IDS
+Magdeburg,       Kiel,            2000,                 22580,           
+Magdeburg,       Hannover,        2000,                 32626,           
+Magdeburg,       Bielefeld,       2000,                 62479,           IDS,Firewall
+Magdeburg,       Braunschweig,    3000,                 33337,           Proxy
+Magdeburg,       Frankfurt,       2000,                 64912,           Proxy,Firewall
+Magdeburg,       Mannheim,        2000,                 56714,           
+Magdeburg,       Stuttgart,       2000,                 40490,           IDS
+Magdeburg,       Karlsruhe,       2000,                 72569,           Proxy
+Magdeburg,       Muenchen,        2000,                 63711,           Firewall,IDS,NAT,Proxy
+Magdeburg,       Augsburg,        2000,                 31922,           
+Magdeburg,       Nuernberg,       2000,                 27602,           Firewall
+Magdeburg,       Bayreuth,        2000,                 25523,           
+Magdeburg,       Wuerzburg,       2000,                 23793,           
+Greifswald,      Hamburg,         2000,                 23842,           Firewall,NAT,Proxy
+Greifswald,      Bremen,          2000,                 59464,           NAT,Firewall
+Greifswald,      Kiel,            2000,                 32226,           Proxy,Firewall,NAT,IDS
+Greifswald,      Hannover,        2000,                 27783,           
+Greifswald,      Bielefeld,       2000,                 30766,           IDS,Firewall,NAT
+Greifswald,      Frankfurt,       2000,                 66643,           Proxy
+Greifswald,      Karlsruhe,       2000,                 44930,          
+Hamburg,         Bremen,          13000,                30564,           NAT
+Hamburg,         Kiel,            14000,                18314,           Firewall,Proxy,NAT
+Hamburg,         Oldenburg,       2000,                 25456,           Firewall,Proxy,IDS,NAT
+Hamburg,         Flensburg,       3000,                 30517,           
+Hamburg,         Bremerhaven,     3000,                 28902,           
+Hamburg,         Norden,          2000,                 48130,           NAT,IDS,Firewall,Proxy
+Hamburg,         Hannover,        71000,                10862,           Proxy
+Hamburg,         Bielefeld,       3000,                 20211,           Proxy,NAT
+Hamburg,         Braunschweig,    2000,                 11102,           NAT,Proxy
+Hamburg,         Osnabrueck,      2000,                 23452,           Firewall
+Hamburg,         Kassel,          2000,                 29262,           Firewall,NAT
+Hamburg,         Frankfurt,       11000,                71666,           NAT,Firewall,Proxy,IDS
+Hamburg,         Darmstadt,       2000,                 51812,           
+Hamburg,         Mannheim,        2000,                 75747,           NAT
+Hamburg,         Giessen,         2000,                 46249,           Firewall,IDS
+Hamburg,         Fulda,           2000,                 47504,           Firewall,NAT
+Hamburg,         Saarbruecken,    2000,                 57611,           Proxy
+Hamburg,         Stuttgart,       3000,                 66049,           
+Hamburg,         Karlsruhe,       2000,                 95134,           
+Hamburg,         Ulm,             2000,                 68760,           IDS,Firewall,NAT
+Hamburg,         Freiburg,        2000,                 77443,           IDS
+Hamburg,         Muenchen,        6000,                 52017,           IDS,NAT,Firewall
+Hamburg,         Augsburg,        2000,                 53136,           IDS,NAT,Firewall,Proxy
+Hamburg,         Nuernberg,       2000,                 36557,           IDS
+Hamburg,         Wuerzburg,       2000,                 34601,           Firewall,NAT,IDS
+Hamburg,         Regensburg,      2000,                 74871,           
+Bremen,          Kiel,            2000,                 31808,           IDS,NAT
+Bremen,          Oldenburg,       4000,                 6912,            
+Bremen,          Flensburg,       2000,                 54736,           Proxy,IDS,NAT,Firewall
+Bremen,          Bremerhaven,     2000,                 56055,           Proxy,IDS,Firewall
+Bremen,          Norden,          3000,                 78003,           NAT,Proxy,IDS
+Bremen,          Hannover,        11000,                50154,           Firewall,NAT
+Bremen,          Bielefeld,       2000,                 52515,           Firewall,Proxy,IDS
+Bremen,          Braunschweig,    2000,                 49452,           IDS,Firewall,NAT,Proxy
+Bremen,          Osnabrueck,      2000,                 25045,           
+Bremen,          Kassel,          2000,                 48065,           NAT,IDS,Firewall
+Bremen,          Frankfurt,       2000,                 81288,           IDS,NAT,Firewall,Proxy
+Bremen,          Darmstadt,       2000,                 47506,           NAT,Proxy,Firewall
+Bremen,          Mannheim,        2000,                 82703,           Proxy,IDS,NAT,Firewall
+Bremen,          Giessen,         2000,                 86240,           Firewall,NAT
+Bremen,          Trier,           2000,                 84247,           NAT,Firewall,IDS
+Bremen,          Stuttgart,       2000,                 79635,           IDS,Firewall,NAT
+Bremen,          Karlsruhe,       2000,                 122524,          IDS,Firewall,Proxy
+Bremen,          Muenchen,        2000,                 99196,           NAT,IDS
+Bremen,          Augsburg,        2000,                 94775,           Firewall
+Bremen,          Nuernberg,       2000,                 76356,           
+Bremen,          Wuerzburg,       2000,                 58532,           NAT,IDS,Firewall
+Kiel,            Oldenburg,       2000,                 45418,           Firewall,Proxy
+Kiel,            Flensburg,       3000,                 48666,           IDS,Firewall,Proxy
+Kiel,            Bremerhaven,     2000,                 56689,           NAT,Firewall,Proxy
+Kiel,            Hannover,        2000,                 25807,           Firewall,IDS,NAT,Proxy
+Kiel,            Bielefeld,       2000,                 30100,           
+Kiel,            Braunschweig,    2000,                 19406,           IDS,Firewall,Proxy
+Kiel,            Kassel,          2000,                 43088,           Proxy,NAT,Firewall,IDS
+Kiel,            Frankfurt,       2000,                 38764,           
+Kiel,            Darmstadt,       2000,                 75688,           NAT
+Kiel,            Mannheim,        2000,                 113309,          Firewall,NAT,IDS
+Kiel,            Stuttgart,       2000,                 99818,           Firewall,NAT,IDS,Proxy
+Kiel,            Karlsruhe,       2000,                 96268,           Proxy
+Kiel,            Muenchen,        2000,                 46603,           Proxy,NAT,Firewall
+Kiel,            Augsburg,        2000,                 73311,           Proxy,IDS,Firewall,NAT
+Kiel,            Nuernberg,       2000,                 55702,           
+Kiel,            Bayreuth,        2000,                 51055,           Firewall,Proxy,IDS,NAT
+Kiel,            Wuerzburg,       2000,                 83690,           NAT,Firewall,Proxy,IDS
+Oldenburg,       Bremerhaven,     2000,                 30314,           
+Oldenburg,       Norden,          2000,                 72271,           Proxy,NAT,Firewall
+Oldenburg,       Hannover,        2000,                 63075,           IDS,NAT
+Oldenburg,       Bielefeld,       2000,                 37592,           
+Oldenburg,       Osnabrueck,      2000,                 57101,           Proxy,IDS,Firewall
+Oldenburg,       Frankfurt,       2000,                 80715,           NAT,Firewall,IDS
+Oldenburg,       Stuttgart,       2000,                 99477,           Proxy,Firewall,NAT
+Oldenburg,       Muenchen,        2000,                 69795,           IDS,Firewall,Proxy,NAT
+Flensburg,       Bremerhaven,     2000,                 11416,           
+Flensburg,       Hannover,        2000,                 46853,           Firewall,NAT,IDS,Proxy
+Flensburg,       Bielefeld,       2000,                 65935,           Firewall
+Flensburg,       Frankfurt,       5000,                 94438,           Firewall,IDS,Proxy,NAT
+Bremerhaven,     Hannover,        2000,                 30902,           
+Bremerhaven,     Bielefeld,       2000,                 83502,           NAT,Proxy,IDS,Firewall
+Bremerhaven,     Frankfurt,       2000,                 73116,           Proxy,IDS,Firewall
+Norden,          Hannover,        2000,                 34682,           
+Norden,          Bielefeld,       2000,                 36806,           
+Norden,          Osnabrueck,      2000,                 42042,           Proxy,IDS
+Norden,          Frankfurt,       2000,                 70830,           Firewall,NAT,IDS,Proxy
+Norden,          Saarbruecken,    2000,                 78159,           Firewall,NAT,IDS,Proxy
+Norden,          Konstanz,        2000,                 101790,          Firewall,NAT,Proxy,IDS
+Norden,          Muenchen,        2000,                 77250,            
+Norden,          Passau,          2000,                 123138,          Proxy,Firewall,NAT,IDS
+Hannover,        Bielefeld,       25000,                28691,           NAT,IDS
+Hannover,        Braunschweig,    5000,                 18232,          
+Hannover,        Osnabrueck,      3000,                 44465,           Proxy,Firewall
+Hannover,        Kassel,          6000,                 19365,           
+Hannover,        Frankfurt,       49000,                45804,           Proxy,NAT
+Hannover,        Darmstadt,       2000,                 62790,           IDS
+Hannover,        Mannheim,        2000,                 44312,           IDS,NAT,Proxy,Firewall
+Hannover,        Giessen,         2000,                 37623,           
+Hannover,        Trier,           2000,                 54114,           
+Hannover,        Fulda,           2000,                 45468,           Proxy,NAT
+Hannover,        Saarbruecken,    2000,                 52473,           
+Hannover,        Stuttgart,       2000,                 60818,           Proxy,NAT
+Hannover,        Karlsruhe,       2000,                 92427,           NAT,Firewall,IDS,Proxy
+Hannover,        Ulm,             2000,                 114349,          Firewall,NAT,IDS
+Hannover,        Konstanz,        2000,                 75416,           Proxy,Firewall
+Hannover,        Freiburg,        2000,                 92561,           Firewall,Proxy,IDS,NAT
+Hannover,        Muenchen,        2000,                 66047,           Firewall,IDS,Proxy,NAT
+Hannover,        Augsburg,        2000,                 73635,           Firewall,IDS,NAT
+Hannover,        Nuernberg,       4000,                 65240,           Proxy,Firewall
+Hannover,        Wuerzburg,       2000,                 89402,           NAT,Proxy,Firewall,IDS
+Bielefeld,       Braunschweig,    2000,                 45168,           Firewall,IDS
+Bielefeld,       Osnabrueck,      4000,                 34714,           NAT,IDS,Proxy
+Bielefeld,       Kassel,          3000,                 51511,           NAT
+Bielefeld,       Frankfurt,       3000,                 38057,           
+Bielefeld,       Darmstadt,       2000,                 33093,           NAT,Proxy,IDS
+Bielefeld,       Mannheim,        2000,                 38804,           IDS,Firewall,Proxy
+Bielefeld,       Giessen,         2000,                 59426,           IDS,NAT
+Bielefeld,       Fulda,           2000,                 57813,           IDS
+Bielefeld,       Saarbruecken,    2000,                 96014,           IDS,Firewall,Proxy
+Bielefeld,       Stuttgart,       2000,                 99492,           NAT
+Bielefeld,       Karlsruhe,       2000,                 62554,           
+Bielefeld,       Ulm,             2000,                 97269,           Firewall,NAT,Proxy
+Bielefeld,       Muenchen,        2000,                 88358,           IDS
+Bielefeld,       Augsburg,        2000,                 87880,           Firewall,IDS,Proxy,NAT
+Bielefeld,       Nuernberg,       2000,                 50992,           IDS,NAT,Proxy,Firewall
+Bielefeld,       Bayreuth,        2000,                 57585,           Proxy,IDS,NAT
+Bielefeld,       Wuerzburg,       2000,                 35699,           
+Braunschweig,    Kassel,          2000,                 52345,           NAT,IDS,Proxy
+Braunschweig,    Frankfurt,       2000,                 26300,           Firewall
+Braunschweig,    Stuttgart,       2000,                 87773,           Firewall
+Braunschweig,    Karlsruhe,       2000,                 59782,           IDS,Proxy
+Braunschweig,    Muenchen,        2000,                 81063,           IDS,Proxy,NAT,Firewall
+Osnabrueck,      Frankfurt,       2000,                 72022,           Firewall,IDS
+Osnabrueck,      Stuttgart,       2000,                 73700,           NAT
+Osnabrueck,      Muenchen,        2000,                 101571,          IDS
+Kassel,          Frankfurt,       2000,                 17402,           NAT,IDS,Proxy
+Kassel,          Darmstadt,       2000,                 50905,           Proxy,NAT
+Kassel,          Mannheim,        2000,                 47922,           Proxy,IDS,Firewall
+Kassel,          Giessen,         2000,                 22455,           NAT,Proxy
+Kassel,          Fulda,           2000,                 26109,           IDS,Proxy
+Kassel,          Stuttgart,       2000,                 83637,           Firewall,Proxy
+Kassel,          Karlsruhe,       2000,                 76640,           Proxy
+Kassel,          Muenchen,        2000,                 33310,           IDS,Firewall
+Kassel,          Nuernberg,       2000,                 28473,           
+Frankfurt,       Darmstadt,       25000,                14279,           IDS,NAT,Firewall,Proxy
+Frankfurt,       Mannheim,        35000,                23370,           
+Frankfurt,       Kaiserslautern,  2000,                 23728,           NAT,Proxy,IDS
+Frankfurt,       Giessen,         9000,                 7183,            Proxy,IDS,Firewall
+Frankfurt,       Trier,           2000,                 24940,           Firewall
+Frankfurt,       Fulda,           2000,                 10434,           IDS
+Frankfurt,       Saarbruecken,    5000,                 41096,           IDS,Firewall
+Frankfurt,       Stuttgart,       19000,                29843,           IDS,Firewall
+Frankfurt,       Karlsruhe,       8000,                 36455,           Firewall
+Frankfurt,       Ulm,             5000,                 52319,           NAT,Proxy
+Frankfurt,       Konstanz,        3000,                 63110,           Proxy,IDS
+Frankfurt,       Freiburg,        2000,                 60790,           Proxy,NAT,IDS,Firewall
+Frankfurt,       Muenchen,        3000,                 53278,           NAT,IDS
+Frankfurt,       Augsburg,        2000,                 52262,           Firewall
+Frankfurt,       Kempten,         2000,                 72801,           Firewall,NAT,Proxy
+Frankfurt,       Passau,          2000,                 61925,           IDS
+Frankfurt,       Nuernberg,       23000,                34759,           Firewall,NAT,Proxy
+Frankfurt,       Bayreuth,        2000,                 58997,           NAT,Firewall,IDS
+Frankfurt,       Wuerzburg,       3000,                 20517,           NAT,Firewall,IDS
+Frankfurt,       Regensburg,      2000,                 72639,           Firewall,Proxy
+Darmstadt,       Mannheim,        4000,                 28730,           IDS,Firewall
+Darmstadt,       Kaiserslautern,  2000,                 47220,           IDS,NAT
+Darmstadt,       Giessen,         2000,                 32557,           Proxy
+Darmstadt,       Trier,           3000,                 31760,           NAT,Firewall,Proxy,IDS
+Darmstadt,       Fulda,           2000,                 34655,           NAT,IDS,Proxy
+Darmstadt,       Saarbruecken,    2000,                 30686,           IDS
+Darmstadt,       Stuttgart,       2000,                 65064,           Firewall
+Darmstadt,       Karlsruhe,       2000,                 36201,           NAT,IDS,Proxy,Firewall
+Darmstadt,       Ulm,             2000,                 35536,           Firewall,IDS
+Darmstadt,       Freiburg,        2000,                 44052,           NAT,IDS,Firewall
+Darmstadt,       Muenchen,        2000,                 42543,           IDS,Firewall,Proxy,NAT
+Darmstadt,       Augsburg,        2000,                 62791,           Proxy,Firewall
+Darmstadt,       Nuernberg,       2000,                 33446,           NAT,Firewall,IDS
+Darmstadt,       Wuerzburg,       2000,                 23551,           IDS,Firewall,Proxy,NAT
+Mannheim,        Kaiserslautern,  4000,                 65174,           NAT
+Mannheim,        Giessen,         2000,                 23305,           Firewall,NAT,IDS,Proxy
+Mannheim,        Trier,           2000,                 53032,           Firewall,NAT,IDS
+Mannheim,        Fulda,           2000,                 27072,           Proxy,NAT,IDS
+Mannheim,        Saarbruecken,    5000,                 83498,           IDS
+Mannheim,        Stuttgart,       5000,                 67571,           Proxy,IDS
+Mannheim,        Karlsruhe,       4000,                 33103,           Firewall,Proxy
+Mannheim,        Ulm,             2000,                 22395,           
+Mannheim,        Konstanz,        2000,                 102000,          Proxy,IDS,NAT,Firewall
+Mannheim,        Freiburg,        2000,                 18053,           
+Mannheim,        Muenchen,        2000,                 66818,           Proxy,IDS
+Mannheim,        Augsburg,        2000,                 39728,           NAT
+Mannheim,        Kempten,         2000,                 67394,           NAT
+Mannheim,        Nuernberg,       2000,                 81731,           NAT,Proxy
+Mannheim,        Bayreuth,        2000,                 43001,           Firewall,NAT,Proxy,IDS
+Mannheim,        Wuerzburg,       2000,                 42978,           Proxy
+Kaiserslautern,  Trier,           2000,                 27875,           
+Kaiserslautern,  Saarbruecken,    2000,                 43660,           Proxy,NAT,Firewall,IDS
+Kaiserslautern,  Stuttgart,       2000,                 42296,           IDS
+Kaiserslautern,  Karlsruhe,       3000,                 13533,           
+Kaiserslautern,  Muenchen,        2000,                 33381,           NAT,Proxy
+Giessen,         Fulda,           2000,                 21417,           Firewall,IDS,NAT,Proxy
+Giessen,         Stuttgart,       2000,                 56862,           Proxy
+Giessen,         Karlsruhe,       2000,                 40920,           Proxy
+Giessen,         Muenchen,        2000,                 34765,           IDS,Proxy,NAT
+Giessen,         Nuernberg,       2000,                 34734,           
+Giessen,         Wuerzburg,       2000,                 53110,           NAT
+Trier,           Saarbruecken,    2000,                 76739,           Firewall
+Trier,           Stuttgart,       2000,                 29199,           
+Trier,           Karlsruhe,       2000,                 72422,           Firewall,IDS
+Trier,           Muenchen,        2000,                 48407,           NAT
+Fulda,           Stuttgart,       2000,                 37569,           Firewall,IDS,Proxy
+Fulda,           Karlsruhe,       2000,                 44252,           
+Fulda,           Muenchen,        2000,                 50121,           NAT,IDS,Proxy,Firewall
+Fulda,           Nuernberg,       2000,                 43818,           Firewall
+Fulda,           Bayreuth,        2000,                 42988,           Firewall,Proxy,IDS,NAT
+Fulda,           Wuerzburg,       2000,                 47662,            NAT,Firewall,Proxy,IDS
+Saarbruecken,    Stuttgart,       2000,                 26300,           
+Saarbruecken,    Karlsruhe,       2000,                 79220,           IDS,NAT
+Saarbruecken,    Freiburg,        2000,                 114743,          NAT,Proxy
+Saarbruecken,    Muenchen,        2000,                 77904,           NAT,IDS,Proxy,Firewall
+Saarbruecken,    Augsburg,        2000,                 41072,           Proxy,Firewall
+Saarbruecken,    Nuernberg,       2000,                 65307,           Firewall
+Stuttgart,       Karlsruhe,       35000,                95501,           Proxy,NAT
+Stuttgart,       Ulm,             11000,                70831,           Firewall,Proxy,IDS,NAT
+Stuttgart,       Konstanz,        4000,                 54737,           IDS,NAT,Proxy,Firewall
+Stuttgart,       Freiburg,        6000,                 73072,           Firewall,IDS,Proxy
+Stuttgart,       Muenchen,        30000,                20240,           Firewall
+Stuttgart,       Augsburg,        2000,                 40006,           NAT
+Stuttgart,       Kempten,         2000,                 55227,           Firewall
+Stuttgart,       Passau,          2000,                 48097,           IDS
+Stuttgart,       Nuernberg,       35000,                27283,           IDS,Firewall
+Stuttgart,       Bayreuth,        2000,                 62233,           IDS,NAT,Proxy,Firewall
+Stuttgart,       Wuerzburg,       2000,                 73122,           NAT,IDS,Firewall
+Stuttgart,       Regensburg,      2000,                 30765,           IDS,NAT,Firewall
+Karlsruhe,       Ulm,             2000,                 89123,           IDS,Firewall,Proxy,NAT
+Karlsruhe,       Konstanz,        2000,                 81024,           Proxy,NAT,Firewall
+Karlsruhe,       Freiburg,        5000,                 17293,           
+Karlsruhe,       Muenchen,        4000,                 60611,           Proxy,IDS,Firewall,NAT
+Karlsruhe,       Augsburg,        2000,                 57326,           Firewall,IDS
+Karlsruhe,       Kempten,         2000,                 71261,           Proxy
+Karlsruhe,       Nuernberg,       2000,                 53885,           NAT,IDS,Proxy
+Karlsruhe,       Bayreuth,        2000,                 63914,           IDS
+Karlsruhe,       Wuerzburg,       2000,                 15659,           
+Ulm,             Konstanz,        2000,                 64835,           NAT,Firewall,IDS
+Ulm,             Muenchen,        2000,                 21912,           
+Ulm,             Augsburg,        2000,                 35447,           NAT,Proxy,IDS
+Ulm,             Kempten,         2000,                 44774,           
+Ulm,             Nuernberg,       2000,                 21847,           Proxy,Firewall,IDS,NAT
+Ulm,             Wuerzburg,       2000,                 29654,           
+Konstanz,        Freiburg,        3000,                 14906,           
+Konstanz,        Muenchen,        5000,                 16224,           Proxy
+Konstanz,        Augsburg,        2000,                 43838,           Firewall
+Konstanz,        Kempten,         2000,                 48209,           NAT,Firewall,Proxy
+Konstanz,        Bayreuth,        2000,                 69913,           
+Freiburg,        Muenchen,        2000,                 34685,           IDS,Proxy,NAT,Firewall
+Muenchen,        Augsburg,        20000,                13022,          
+Muenchen,        Kempten,         2000,                 16658,           Proxy
+Muenchen,        Passau,          5000,                 8768,            NAT,Firewall,IDS
+Muenchen,        Nuernberg,       32000,                11377,           IDS,Firewall,NAT
+Muenchen,        Bayreuth,        2000,                 20550,           NAT,Firewall,IDS,Proxy
+Muenchen,        Wuerzburg,       3000,                 35379,           Firewall,IDS
+Muenchen,        Regensburg,      2000,                 11721,           IDS,Firewall,Proxy
+Augsburg,        Kempten,         2000,                 19264,           Proxy,Firewall
+Augsburg,        Nuernberg,       2000,                 32136,           IDS,Firewall
+Augsburg,        Bayreuth,        2000,                 23626,           Firewall
+Augsburg,        Wuerzburg,       2000,                 9114,            
+Passau,          Nuernberg,       2000,                 35643,           Proxy
+Passau,          Bayreuth,        2000,                 46011,           IDS,Firewall,NAT,Proxy
+Passau,          Wuerzburg,       2000,                 35993,           
+Passau,          Regensburg,      2000,                 8564,           
+Nuernberg,       Bayreuth,        5000,                 51411,           Proxy,IDS,NAT,Firewall
+Nuernberg,       Wuerzburg,       10000,                51308,           Proxy
+Nuernberg,       Regensburg,      9000,                 25750,           IDS
+Bayreuth,        Wuerzburg,       3000,                 46364,           NAT,IDS,Firewall,Proxy
+Bayreuth,        Regensburg,      3000,                 24067,           

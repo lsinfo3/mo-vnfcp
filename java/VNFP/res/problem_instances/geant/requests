@@ -1,0 +1,463 @@
+# Ingress-ID, Egress-ID, Min-Bandwidth (kbps), Max-Delay (μs), VNF, VNF, VNF, ...
+ny,           il,        3003,                 29929,          IDS,NAT
+de,           ie,        134,                  3171,           Firewall,IDS,Proxy,NAT
+cz,           ny,        13138,                20085,          NAT,IDS,Firewall,Proxy
+hr,           cz,        135,                  1666,           Proxy,NAT,IDS,Firewall
+lu,           cz,        14,                   3273,           Proxy,Firewall
+de,           hr,        4138,                 4888,           Firewall,IDS,NAT
+si,           ie,        38,                   8436,           NAT,IDS,Proxy
+de,           il,        3211,                 8119,           Proxy,IDS,Firewall,NAT
+ny,           nl,        535,                  17835,          Proxy
+ny,           se,        5156,                 23888,          Proxy,IDS,NAT,Firewall
+de,           fr,        1205,                 1408,           Firewall,Proxy
+be,           at,        46267,                5567,           IDS,Firewall,NAT,Proxy
+at,           it,        2033,                 4739,           IDS,Proxy,Firewall,NAT
+si,           pl,        269,                  3400,           NAT
+ch,           cz,        7069,                 5558,           IDS,Proxy
+cz,           es,        556,                  4847,           NAT,Proxy,IDS
+si,           uk,        1294,                 3744,           NAT
+it,           pt,        1786,                 5985,           
+nl,           il,        578,                  15803,          IDS,Proxy
+gr,           it,        102,                  5342,           NAT,Firewall
+it,           se,        8485,                 3920,           
+it,           cz,        160,                  2320,           NAT,Proxy,Firewall,IDS
+at,           nl,        725,                  3511,           Proxy,Firewall,NAT
+pl,           be,        710,                  5324,           IDS,Proxy,Firewall,NAT
+be,           uk,        34415,                2409,           
+fr,           ny,        8677,                 24633,          IDS,Firewall,NAT,Proxy
+ny,           hu,        1753,                 14382,          NAT,Firewall,Proxy,IDS
+se,           il,        156,                  18814,          
+lu,           nl,        35,                   758,            Firewall,Proxy
+fr,           gr,        1179,                 7367,           Firewall,NAT,Proxy,IDS
+il,           uk,        779,                  11458,          IDS,Proxy
+ch,           si,        2304,                 3463,           Proxy
+es,           hr,        822,                  6468,           NAT
+lu,           it,        13,                   3999,           Proxy,NAT,IDS,Firewall
+de,           pl,        4172,                 2122,           Firewall,NAT
+de,           ny,        3406,                 20376,          NAT,IDS
+pl,           es,        653,                  4706,           
+at,           gr,        8167,                 7981,           
+it,           fr,        2343,                 1865,           Proxy
+fr,           il,        136,                  8333,           
+es,           fr,        856,                  2157,           Firewall,IDS
+nl,           sk,        1067,                 4581,           IDS,Firewall,NAT
+il,           nl,        85,                   7905,           Proxy
+lu,           se,        538,                  8383,           
+il,           hr,        14,                   17194,          NAT
+lu,           ie,        35,                   3735,           Firewall
+gr,           lu,        8,                    10840,          NAT,Firewall
+be,           pl,        10180,                4735,           NAT,IDS,Firewall,Proxy
+hu,           de,        13369,                2576,           
+pt,           pl,        42,                   9278,           Firewall,NAT,IDS
+si,           lu,        4,                    6894,           
+il,           ie,        9,                    17906,          IDS,Firewall,NAT,Proxy
+sk,           pt,        8500,                 13144,          IDS,Proxy,NAT,Firewall
+nl,           ny,        78,                   17941,          Firewall,Proxy
+be,           es,        7141,                 4984,           Proxy,Firewall,NAT,IDS
+hu,           pt,        70,                   10960,          IDS,Proxy
+it,           at,        2748,                 2529,           Proxy,Firewall
+hu,           si,        433,                  1565,           Proxy,IDS
+lu,           sk,        6,                    6801,           Firewall
+lu,           ny,        204,                  15482,          
+pl,           il,        65,                   18893,          
+uk,           es,        778,                  4636,           Proxy,Firewall,NAT,IDS
+es,           uk,        4009,                 4033,           NAT,Firewall
+ch,           ny,        26620,                30788,          IDS
+il,           ny,        194,                  19103,          
+hr,           il,        27,                   9933,           Firewall,Proxy,IDS,NAT
+ie,           il,        60,                   11345,          Firewall,IDS,NAT
+it,           be,        943,                  2595,           
+hu,           be,        124,                  4692,           NAT
+ie,           si,        65,                   9592,           Firewall
+ny,           pl,        504,                  29725,          IDS,NAT,Firewall,Proxy
+ch,           il,        1937,                 11854,          Proxy,NAT,IDS
+ny,           sk,        336,                  23399,          Firewall,IDS,NAT,Proxy
+pl,           fr,        2041,                 3737,           IDS,Proxy,NAT
+lu,           be,        27,                   821,            
+ny,           de,        35420,                15902,          
+be,           hu,        1781,                 3827,           IDS,Firewall
+uk,           cz,        421,                  4883,           
+hr,           at,        6304,                 1787,           IDS
+at,           ie,        66,                   7154,           NAT,IDS,Proxy
+pl,           at,        59,                   4794,           Proxy,IDS,NAT
+es,           ch,        3277,                 5951,           Proxy,IDS,NAT
+nl,           de,        21941,                987,            
+fr,           ie,        435,                  3473,           Proxy
+ny,           hr,        836,                  27918,          
+si,           pt,        52,                   6181,           IDS,Proxy
+de,           ch,        990,                  3603,           IDS,NAT,Proxy,Firewall
+lu,           gr,        7,                    8602,           NAT,Firewall,IDS,Proxy
+hr,           gr,        109,                  7146,           Firewall
+uk,           ie,        10,                   2162,           IDS
+at,           si,        42759,                1203,           
+uk,           gr,        161,                  10901,          Firewall,IDS,Proxy,NAT
+pl,           si,        1333,                 5328,           NAT,Firewall,Proxy,IDS
+it,           si,        1027,                 6223,           IDS
+ch,           ie,        273,                  3324,           Firewall,NAT,IDS
+lu,           uk,        3151,                 1364,           IDS,Firewall,Proxy,NAT
+es,           pl,        240,                  10379,          
+hr,           nl,        292,                  5134,           Proxy,Firewall
+ie,           es,        950,                  4774,           
+be,           de,        35565,                1915,           NAT,IDS,Proxy
+uk,           lu,        2823,                 1674,           Firewall
+ie,           ch,        403,                  5192,           Firewall
+sk,           pl,        5,                    2923,           IDS,Proxy,Firewall
+se,           sk,        270,                  3681,           NAT,IDS
+lu,           pt,        23,                   4410,           Proxy,IDS,NAT
+gr,           ie,        78,                   9551,           IDS
+be,           il,        639,                  14348,          NAT,Proxy,IDS
+il,           it,        902,                  9836,           IDS
+ny,           it,        2164,                 30722,          IDS,Proxy
+it,           gr,        3046,                 3456,           Firewall,IDS,Proxy,NAT
+ny,           ie,        136,                  13117,          Proxy,NAT
+gr,           sk,        239,                  5527,           NAT,Proxy,Firewall
+uk,           it,        586,                  2617,           NAT,Proxy,IDS,Firewall
+lu,           il,        13,                   17988,          Proxy
+fr,           be,        2309,                 884,            Proxy
+uk,           at,        165,                  2698,           NAT
+de,           si,        15336,                3867,           IDS,Proxy
+ny,           uk,        14310,                25144,          IDS,Firewall,Proxy
+be,           ny,        117644,               18691,          Proxy,Firewall,IDS,NAT
+nl,           hr,        1056,                 3363,           IDS
+si,           hu,        4941,                 1048,           
+pt,           si,        41,                   9457,           Firewall,Proxy
+cz,           il,        245,                  11923,          IDS,Firewall,Proxy,NAT
+il,           sk,        24,                   11091,          IDS,Proxy,Firewall
+gr,           es,        111,                  10542,          
+se,           lu,        201,                  4858,           IDS,NAT
+si,           il,        16,                   9768,           Proxy
+se,           it,        449,                  6068,           NAT
+hu,           ch,        389,                  3532,           NAT,IDS,Proxy,Firewall
+gr,           pt,        58,                   13147,          Proxy
+at,           ny,        514,                  30364,          IDS,Proxy,NAT,Firewall
+ie,           hu,        689,                  8285,           IDS,Firewall
+de,           at,        1741,                 2235,           Firewall,Proxy,NAT
+gr,           ch,        549,                  5723,           NAT
+se,           ie,        231,                  4951,           NAT,Proxy,IDS,Firewall
+de,           be,        685,                  2097,           IDS,Proxy,NAT
+gr,           be,        208,                  7275,           Firewall
+ie,           pl,        1801,                 7558,           IDS,Proxy
+gr,           nl,        287,                  7947,           IDS,Proxy
+si,           ch,        634,                  3769,           
+il,           fr,        110,                  13808,          Proxy
+hr,           ie,        83,                   8032,           
+hu,           se,        4067,                 6570,           Firewall,IDS,Proxy,NAT
+fr,           pl,        1298,                 4805,           NAT,Proxy,Firewall,IDS
+gr,           ny,        149,                  23418,          Firewall
+pl,           hr,        3325,                 3206,           NAT
+se,           hr,        568,                  7715,           Proxy,IDS,Firewall,NAT
+ie,           de,        44044,                3341,           IDS,Firewall,NAT,Proxy
+hr,           pt,        46,                   8646,           
+it,           lu,        29,                   3026,           Proxy,Firewall,IDS,NAT
+nl,           fr,        2834,                 1505,           NAT
+it,           de,        11963,                1730,           IDS,NAT,Firewall
+gr,           si,        202,                  6204,           NAT,Firewall,IDS,Proxy
+il,           se,        1069,                 16555,          
+nl,           pl,        1913,                 3030,           
+at,           es,        1258,                 8583,           
+es,           ie,        81,                   6495,           IDS,NAT,Proxy
+pl,           sk,        25,                   2678,           Proxy,NAT
+it,           hr,        177,                  6319,           Firewall,IDS,Proxy
+sk,           ie,        63,                   5897,           Proxy
+ch,           se,        95143,                7330,           Firewall
+se,           pt,        5993,                 13209,          Proxy
+pt,           at,        55,                   11411,          Firewall,Proxy,NAT
+at,           lu,        71,                   3110,           Firewall,IDS,Proxy
+at,           de,        13150,                2126,           
+uk,           hu,        234,                  3271,           Firewall,Proxy,IDS
+it,           il,        642,                  10202,          Proxy
+be,           nl,        40325,                610,            IDS
+uk,           ch,        1818,                 2729,           
+ch,           pl,        20071,                4450,           
+se,           ny,        1984,                 29361,          
+at,           il,        788,                  7812,           
+hr,           hu,        14153,                1026,           NAT,IDS,Proxy,Firewall
+at,           fr,        247,                  2391,           NAT
+hu,           uk,        1543,                 6886,           Proxy
+lu,           de,        14569,                1594,           NAT,Firewall,IDS,Proxy
+gr,           hu,        1894,                 9899,           Firewall,Proxy
+it,           ch,        5358,                 784,            Firewall
+hu,           at,        4291,                 518,            IDS
+lu,           hr,        5,                    3575,           
+be,           fr,        115637,               1215,           
+ch,           lu,        217,                  2635,           Proxy,NAT,IDS,Firewall
+it,           sk,        1330,                 5823,           NAT,Proxy
+fr,           it,        2316,                 3111,           
+it,           ny,        12432,                18831,          IDS,NAT,Firewall
+uk,           ny,        2176,                 18326,          Proxy
+hu,           lu,        16,                   5650,           
+pt,           fr,        99,                   4188,           Proxy,Firewall
+ch,           at,        87337,                2542,           NAT
+fr,           cz,        2270,                 2099,           IDS,Firewall,Proxy
+ny,           es,        1581,                 20372,          IDS,Firewall,Proxy,NAT
+se,           be,        504,                  3635,           NAT,Proxy,Firewall,IDS
+hu,           fr,        147,                  3517,           NAT,Firewall,IDS
+si,           ny,        149,                  18648,          IDS
+ny,           pt,        263,                  17837,          NAT,Proxy
+uk,           il,        1049,                 12778,          IDS,Firewall,NAT
+cz,           se,        27184,                3688,           
+nl,           at,        1438,                 2221,           Proxy,NAT,Firewall
+ch,           fr,        241173,               1688,           IDS,Proxy
+lu,           pl,        19,                   5153,           
+at,           ch,        19621,                2732,           NAT
+nl,           se,        7913,                 6201,           
+es,           ny,        1415,                 32020,          
+hu,           nl,        384,                  4396,           Proxy,NAT,IDS
+hu,           ie,        61,                   5505,           NAT,Proxy
+nl,           ch,        1325,                 3678,           NAT
+es,           cz,        767,                  6057,           
+sk,           at,        234,                  1123,           
+at,           cz,        1,                    1456,           IDS,Proxy
+gr,           de,        33145,                8756,           Proxy
+pt,           hr,        29,                   6172,           Firewall,IDS,NAT
+il,           be,        23,                   7260,           Firewall,NAT
+nl,           gr,        700,                  6883,           Firewall
+sk,           uk,        526,                  6361,           Firewall,IDS
+be,           se,        86347,                3696,           Firewall
+es,           it,        4601,                 3427,           
+si,           se,        2964,                 8610,           Firewall,NAT,Proxy,IDS
+de,           nl,        1931,                 1337,           
+il,           cz,        31,                   10308,          Firewall,IDS,NAT
+hr,           ny,        104,                  19709,          Proxy,NAT,Firewall,IDS
+fr,           lu,        108,                  987,            
+hr,           pl,        84,                   2532,           IDS,NAT
+ie,           sk,        114,                  8758,           Firewall,IDS,NAT,Proxy
+pt,           ny,        63,                   34892,          Proxy,Firewall,IDS,NAT
+sk,           ch,        822,                  4236,           NAT,IDS
+fr,           pt,        279,                  4033,           IDS,NAT,Proxy
+hu,           hr,        6274,                 925,            Proxy
+cz,           hr,        5791,                 1721,           Firewall
+nl,           it,        686,                  3101,           Firewall,IDS
+at,           se,        50905,                4979,           NAT
+de,           gr,        6042,                 4883,           
+es,           pt,        1012,                 1301,           
+pl,           ie,        165,                  4723,           Firewall
+ie,           ny,        3359,                 26004,          IDS,NAT,Firewall,Proxy
+ny,           cz,        1004,                 28278,          
+de,           pt,        954,                  9394,           Proxy
+nl,           es,        2753,                 3772,           IDS,NAT,Firewall
+pl,           nl,        6601,                 4069,           NAT,Firewall,IDS
+be,           it,        3182,                 3425,           IDS
+uk,           sk,        162,                  3610,           
+at,           hr,        43423,                882,            IDS,NAT
+de,           lu,        1643,                 3387,           NAT,Proxy,IDS,Firewall
+es,           gr,        221,                  5427,           Firewall,Proxy,NAT
+be,           ch,        14415,                2682,           
+sk,           hu,        32556,                365,            NAT
+pl,           hu,        1758,                 3001,           Proxy,IDS,NAT
+de,           it,        1247,                 1041,           IDS,Proxy,Firewall
+il,           pt,        36,                   14615,          NAT,Firewall,Proxy,IDS
+sk,           hr,        3660,                 1485,           IDS,Proxy,NAT,Firewall
+pl,           uk,        2089,                 6205,           
+lu,           fr,        191,                  627,            Proxy
+it,           es,        1241,                 3154,           
+fr,           sk,        210,                  3735,           
+gr,           il,        66,                   17716,          Proxy
+ch,           sk,        15078,                2930,           NAT
+nl,           ie,        427,                  3026,           Proxy,IDS
+ch,           gr,        822,                  5564,           Proxy,IDS,Firewall
+de,           se,        17732,                4922,           IDS,NAT,Proxy,Firewall
+pt,           de,        4611,                 4106,           Proxy,IDS,NAT,Firewall
+il,           es,        57,                   8151,           Firewall,NAT,Proxy
+ny,           fr,        30728,                26999,          NAT,Firewall
+sk,           ny,        4113,                 34246,          
+sk,           gr,        213,                  6997,           NAT,Proxy,Firewall
+gr,           fr,        90,                   10125,          NAT
+fr,           hr,        334,                  7237,           IDS,Proxy
+be,           ie,        788,                  4104,           Proxy,NAT
+nl,           hu,        1975,                 3628,           Firewall,IDS,Proxy
+lu,           si,        11,                   4371,           Proxy,IDS
+ch,           pt,        65328,                5584,           IDS,NAT,Firewall,Proxy
+es,           lu,        33,                   3176,           Proxy,Firewall
+uk,           fr,        638,                  1546,           IDS,NAT
+uk,           pt,        9291,                 7029,           
+si,           de,        21227,                3132,           NAT,Firewall,Proxy,IDS
+be,           pt,        3838,                 4445,           
+be,           si,        1338,                 3587,           Firewall,Proxy,NAT
+fr,           es,        3183,                 3291,           Proxy,NAT
+gr,           uk,        3282,                 5001,           NAT,Firewall,Proxy
+pl,           pt,        739,                  10204,          Firewall,Proxy,NAT
+il,           hu,        550,                  17634,          NAT
+gr,           hr,        92,                   9016,           Firewall,NAT,IDS,Proxy
+pl,           it,        111,                  4576,           NAT,Firewall
+fr,           nl,        813,                  1412,           IDS,NAT,Firewall,Proxy
+sk,           nl,        14001,                3274,           NAT
+cz,           nl,        8444,                 2041,           Proxy
+ie,           uk,        312,                  2054,           
+nl,           uk,        11285,                1019,           
+si,           hr,        515,                  460,            IDS,Proxy
+ny,           lu,        23,                   25076,          NAT,Proxy,IDS,Firewall
+gr,           se,        4303,                 14605,          IDS,NAT
+pl,           cz,        84,                   1254,           
+pl,           se,        20305,                2507,           NAT,Firewall,IDS
+ie,           at,        2096,                 5343,           Firewall,NAT,Proxy,IDS
+ch,           be,        11740,                2273,           NAT,Firewall,Proxy,IDS
+si,           sk,        158,                  1736,           Proxy
+il,           at,        1453,                 12517,          Firewall,NAT,Proxy,IDS
+hr,           lu,        30,                   4608,           IDS,NAT,Proxy,Firewall
+pl,           lu,        1087,                 4523,           Firewall,NAT,Proxy
+de,           sk,        226,                  2336,           NAT
+nl,           si,        872,                  3663,           
+hr,           de,        22535,                2528,           Proxy
+fr,           ch,        15547,                1817,           Firewall,Proxy
+ny,           at,        2117,                 20923,          
+ie,           it,        436,                  3815,           IDS,Proxy,NAT
+lu,           ch,        394,                  2342,           Proxy,Firewall,NAT,IDS
+si,           nl,        386,                  6012,           
+be,           cz,        3804,                 4486,           Proxy
+lu,           es,        43,                   4283,           
+hu,           ny,        243,                  32175,          Firewall,NAT
+nl,           cz,        3275,                 1573,           IDS,Proxy,NAT,Firewall
+se,           at,        609,                  4515,           Proxy,IDS
+ie,           gr,        64,                   14049,          IDS,Firewall,NAT,Proxy
+cz,           hu,        4181,                 1935,           
+pt,           hu,        889,                  13309,          Firewall,Proxy,IDS,NAT
+se,           es,        884,                  9387,           NAT
+uk,           hr,        355,                  3604,           Firewall,IDS
+il,           ch,        203,                  10606,          Proxy
+fr,           uk,        5980,                 1097,           Proxy
+pl,           de,        14075,                3229,           Firewall,Proxy,IDS
+sk,           se,        9050,                 3483,           
+hr,           es,        112,                  8949,           NAT,Proxy
+hu,           sk,        359,                  644,            
+si,           cz,        243,                  2749,           Firewall,IDS
+de,           hu,        8389,                 3990,           Proxy
+es,           se,        2958,                 7877,           NAT,Proxy,IDS,Firewall
+ie,           pt,        3027,                 4113,           
+il,           lu,        1,                    12458,          IDS,Firewall
+ie,           lu,        1026,                 4373,           
+pl,           ch,        1639,                 3796,           IDS,Proxy
+es,           be,        547,                  6097,           Firewall,IDS,Proxy
+si,           be,        175,                  5892,           Proxy
+gr,           pl,        168,                  7992,           
+se,           cz,        578,                  2272,           NAT
+it,           pl,        734,                  5783,           
+sk,           fr,        1157,                 3766,           NAT,Proxy,Firewall
+lu,           at,        60,                   6314,           Firewall,IDS,NAT,Proxy
+nl,           be,        2212,                 617,            NAT,Firewall,IDS
+be,           lu,        1514,                 483,            Proxy,Firewall,NAT,IDS
+uk,           be,        281,                  1809,           IDS,Proxy,NAT,Firewall
+it,           ie,        88,                   3079,           Proxy,NAT,Firewall,IDS
+si,           fr,        41,                   4188,           
+se,           fr,        473,                  6683,           Proxy,Firewall
+gr,           at,        2924,                 8568,           
+hu,           cz,        346,                  2110,           Firewall,NAT,Proxy
+cz,           ch,        1118,                 3188,           Proxy,IDS,Firewall
+ny,           be,        1092,                 23338,          IDS,NAT
+pl,           ny,        3882,                 26967,          IDS,Proxy,NAT,Firewall
+ie,           nl,        423,                  1645,           NAT,Firewall
+uk,           pl,        198,                  5583,           Proxy,NAT,IDS,Firewall
+si,           at,        5543,                 1278,           Proxy,NAT
+cz,           be,        216,                  3137,           Proxy,IDS
+fr,           se,        6944,                 3443,           NAT,Firewall
+cz,           uk,        7859,                 4995,           
+hu,           il,        55,                   8620,           NAT
+es,           il,        699,                  9585,           Proxy
+cz,           sk,        53,                   581,            Proxy
+at,           pt,        307,                  9184,           
+pt,           lu,        1,                    3994,           Firewall,NAT,Proxy
+cz,           si,        5638,                 4351,           Firewall
+pt,           uk,        4069,                 6823,           
+uk,           se,        15342,                3549,           
+es,           de,        14734,                5111,           Proxy
+ie,           fr,        1853,                 2697,           Firewall,Proxy
+se,           gr,        167,                  9361,           NAT,Firewall,IDS
+ch,           de,        205332,               1658,           
+fr,           at,        2775,                 5093,           Firewall,NAT,Proxy,IDS
+pt,           be,        95,                   6340,           Firewall,IDS
+ny,           si,        264,                  23797,          
+es,           at,        732,                  4283,           Firewall,Proxy
+pl,           gr,        249,                  5690,           NAT,Proxy,IDS,Firewall
+at,           uk,        666,                  5630,           Firewall,IDS,Proxy,NAT
+hr,           si,        285,                  536,            Firewall
+cz,           pl,        175,                  867,            NAT
+be,           gr,        1025,                 9140,           Firewall
+pt,           ch,        116,                  7436,           Firewall
+ch,           es,        71045,                3408,           Proxy,NAT,IDS,Firewall
+pt,           es,        181,                  1938,           NAT,IDS,Proxy
+sk,           il,        57,                   13195,          NAT,Firewall,IDS
+cz,           at,        321,                  2381,           IDS,Proxy,NAT
+lu,           hu,        513,                  4111,           
+cz,           de,        12912,                986,            Proxy,IDS,Firewall,NAT
+hr,           sk,        189,                  1481,           NAT,Firewall,Proxy
+cz,           ie,        161,                  3826,           NAT
+hr,           ch,        544,                  3153,           Proxy,NAT,IDS,Firewall
+at,           be,        1799,                 3156,           
+sk,           cz,        135,                  1279,           
+hu,           gr,        113,                  8207,           
+de,           cz,        571,                  1831,           IDS,Proxy,Firewall,NAT
+it,           nl,        3183,                 4309,           
+se,           si,        876,                  6888,           
+ie,           be,        6840,                 3687,           NAT,Proxy,IDS
+si,           es,        102,                  9902,           Firewall
+se,           uk,        4442,                 6525,           IDS
+hr,           be,        43,                   5817,           IDS,NAT
+pt,           ie,        77,                   4362,           Firewall,Proxy,IDS
+il,           gr,        25,                   11151,          NAT,Proxy,IDS
+pt,           cz,        100,                  9948,           NAT,Proxy,IDS,Firewall
+sk,           si,        1953,                 2854,           Firewall,NAT,IDS,Proxy
+be,           hr,        323,                  4563,           Firewall,Proxy,NAT
+sk,           es,        2256,                 7240,           IDS,Firewall,NAT
+hr,           se,        2920,                 7793,           NAT
+se,           nl,        3179,                 5457,           IDS,Proxy,NAT
+ch,           nl,        25837,                3132,           NAT
+nl,           pt,        658,                  5823,           Proxy,NAT
+pt,           it,        485,                  8046,           Proxy
+cz,           gr,        147,                  5866,           NAT
+de,           es,        3005,                 4556,           Firewall,NAT,IDS
+hr,           it,        107,                  4586,           IDS,Firewall
+sk,           be,        102,                  5453,           NAT,Firewall,Proxy
+si,           it,        169,                  5883,           Firewall,NAT
+cz,           fr,        7736,                 3324,           Proxy,NAT,Firewall,IDS
+se,           pl,        895,                  3852,           NAT,Firewall,Proxy,IDS
+pt,           se,        15117,                9542,           Proxy,NAT,Firewall,IDS
+uk,           de,        5754,                 1803,           Proxy
+hu,           es,        451,                  8243,           NAT
+ch,           hr,        49148,                4795,           IDS,Proxy,NAT
+gr,           cz,        222,                  5995,           IDS,Firewall,NAT
+sk,           lu,        6,                    5435,           Firewall
+se,           ch,        1240,                 7335,           NAT
+es,           sk,        677,                  10965,          Firewall,NAT,IDS,Proxy
+ch,           it,        39448,                1214,           
+pt,           nl,        145,                  5311,           Proxy,IDS,Firewall
+hu,           pl,        218,                  1646,           Firewall,NAT
+uk,           si,        162,                  7187,           
+se,           hu,        1138,                 5336,           NAT,IDS,Proxy,Firewall
+at,           sk,        3,                    1469,           NAT,Proxy
+sk,           de,        10143,                2057,           Proxy,NAT
+pt,           il,        24,                   13967,          
+se,           de,        10253,                2600,           NAT,Proxy,IDS
+si,           gr,        132,                  10282,          NAT,Proxy,Firewall,IDS
+ch,           uk,        126006,               2823,           NAT,Firewall,IDS,Proxy
+sk,           it,        125,                  2933,           Proxy,Firewall,IDS
+ny,           ch,        38695,                22412,          Proxy,IDS,NAT
+ny,           gr,        168,                  32481,          Firewall,IDS
+it,           hu,        442,                  5706,           Proxy
+fr,           si,        571,                  5680,           Firewall,IDS
+cz,           it,        285,                  3836,           IDS,NAT,Firewall
+pt,           gr,        31,                   7410,           IDS
+pt,           sk,        38,                   9687,           IDS,Firewall
+nl,           lu,        188,                  783,            NAT
+es,           nl,        382,                  3972,           Proxy,Firewall,IDS
+hr,           uk,        1211,                 7976,           Firewall
+il,           si,        11,                   17047,          NAT
+at,           hu,        61902,                627,            IDS,NAT
+hr,           fr,        149,                  3003,           NAT,IDS
+es,           hu,        838,                  7228,           IDS,NAT
+il,           pl,        22,                   18915,          Firewall,IDS,NAT
+uk,           nl,        5544,                 1535,           Proxy,Firewall,NAT,IDS
+fr,           de,        7681,                 1861,           
+de,           uk,        2542,                 3150,           NAT,Firewall,IDS,Proxy
+hu,           it,        125,                  6198,           Firewall,IDS,NAT,Proxy
+ie,           se,        7638,                 8333,           Proxy,Firewall,NAT,IDS
+be,           sk,        32590,                2760,           Firewall,IDS
+cz,           pt,        995,                  5522,           Firewall,Proxy,NAT,IDS
+ie,           hr,        104,                  8005,           
+cz,           lu,        36,                   3916,           IDS
+fr,           hu,        620,                  3723,           NAT
+it,           uk,        2857,                 4713,           NAT,Firewall,Proxy,IDS
+at,           pl,        10,                   3124,           Firewall,NAT,IDS
+ie,           cz,        1438,                 4868,           Proxy,NAT
+ch,           hu,        11671,                4391,           NAT
+il,           de,        11693,                14629,          Proxy
+es,           si,        196,                  9464,           NAT,IDS,Firewall

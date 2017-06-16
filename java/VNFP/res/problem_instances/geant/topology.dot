@@ -1,0 +1,86 @@
+graph networkGraphTest {
+  node [
+    shape = "circle",
+    style = "filled",
+    fontsize = 16,
+    fixedsize = true
+  ];
+
+  edge [
+    color = "#bbbbbb"
+  ];
+
+  // nodes with CPU
+  node [
+    color = "#007399",
+    fillcolor = "#007399",
+    fontcolor = white
+  ];
+  be;
+  se;
+  hr;
+  nl;
+  ie;
+  ny;
+  ch;
+  hu;
+  uk;
+  pl;
+  si;
+  gr;
+  de;
+  it;
+  sk;
+  cz;
+  il;
+  at;
+  es;
+  lu;
+  pt;
+  fr;
+
+  // nodes without CPU
+  node [
+    color = "#4dd2ff",
+    fillcolor = "#4dd2ff",
+    fontcolor = black
+  ];
+
+  // edges
+  hr -- si [ label = "115" ];
+  ie -- uk [ label = "463" ];
+  ch -- it [ label = "250" ];
+  cz -- de [ label = "411" ];
+  fr -- lu [ label = "287" ];
+  be -- lu [ label = "186" ];
+  hr -- hu [ label = "304" ];
+  il -- nl [ label = "3296" ];
+  at -- ch [ label = "804" ];
+  se -- uk [ label = "1426" ];
+  es -- it [ label = "1189" ];
+  cz -- pl [ label = "309" ];
+  be -- fr [ label = "264" ];
+  at -- hu [ label = "218" ];
+  de -- nl [ label = "358" ];
+  ny -- uk [ label = "5575" ];
+  de -- fr [ label = "478" ];
+  at -- si [ label = "277" ];
+  fr -- uk [ label = "343" ];
+  ch -- fr [ label = "410" ];
+  hu -- sk [ label = "163" ];
+  es -- fr [ label = "1054" ];
+  at -- de [ label = "598" ];
+  at -- ny [ label = "6802" ];
+  de -- se [ label = "1184" ];
+  pl -- se [ label = "777" ];
+  de -- gr [ label = "1794" ];
+  de -- it [ label = "518" ];
+  il -- it [ label = "2658" ];
+  de -- ie [ label = "1088" ];
+  gr -- it [ label = "1453" ];
+  cz -- sk [ label = "290" ];
+  es -- pt [ label = "503" ];
+  pt -- uk [ label = "1588" ];
+  be -- nl [ label = "169" ];
+  nl -- uk [ label = "359" ];
+}

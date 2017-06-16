@@ -1,0 +1,166 @@
+graph networkGraphTest {
+  node [
+    shape = "circle",
+    style = "filled",
+    fontsize = 16,
+    fixedsize = true
+  ];
+
+  edge [
+    color = "#bbbbbb"
+  ];
+
+  // nodes with CPU
+  node [
+    color = "#007399",
+    fillcolor = "#007399",
+    fontcolor = white
+  ];
+  Mu;
+  Lei;
+  Fra;
+  Ham;
+  Ess;
+
+  // nodes without CPU
+  node [
+    color = "#4dd2ff",
+    fillcolor = "#4dd2ff",
+    fontcolor = black
+  ];
+  Due;
+  Kie;
+  Dar;
+  Gre;
+  Ful;
+  Nue;
+  Bie;
+  Reg;
+  Kob;
+  Ulm;
+  Wue;
+  Old;
+  Osn;
+  Aug;
+  Ber;
+  Kai;
+  Erf;
+  Tri;
+  Bre;
+  Mue;
+  Sch;
+  Fre;
+  Pas;
+  Bra;
+  Saa;
+  Man;
+  Dre;
+  Stu;
+  Dor;
+  Kon;
+  Fle;
+  Bre;
+  Wes;
+  Mag;
+  Nor;
+  Sie;
+  Gie;
+  Kem;
+  Han;
+  Bay;
+  Che;
+  Kas;
+  Koe;
+  Kar;
+  Aac;
+
+  // edges
+  Han -- Bre [ label = "3290" ];
+  Tri -- Kob [ label = "3720" ];
+  Erf -- Dre [ label = "4150" ];
+  Due -- Ess [ label = "3290" ];
+  Gie -- Sie [ label = "3290" ];
+  Aug -- Ulm [ label = "3290" ];
+  Wue -- Stu [ label = "3720" ];
+  Lei -- Ber [ label = "3720" ];
+  Gre -- Sch [ label = "3720" ];
+  Kar -- Kai [ label = "3290" ];
+  Kai -- Dar [ label = "3720" ];
+  Bre -- Fle [ label = "3720" ];
+  Kas -- Dor [ label = "3720" ];
+  Man -- Dar [ label = "3290" ];
+  Han -- Ham [ label = "3720" ];
+  Ful -- Fra [ label = "3720" ];
+  Kar -- Saa [ label = "3720" ];
+  Kie -- Sch [ label = "3720" ];
+  Osn -- Han [ label = "3720" ];
+  Reg -- Nue [ label = "3720" ];
+  Fre -- Kar [ label = "3720" ];
+  Kie -- Ham [ label = "3720" ];
+  Reg -- Pas [ label = "3720" ];
+  Gie -- Fra [ label = "3290" ];
+  Mag -- Lei [ label = "3720" ];
+  Fra -- Kob [ label = "3720" ];
+  Saa -- Tri [ label = "3290" ];
+  Wue -- Aug [ label = "4150" ];
+  Bie -- Mue [ label = "3290" ];
+  Aac -- Koe [ label = "3290" ];
+  Wue -- Ful [ label = "3720" ];
+  Kob -- Koe [ label = "3290" ];
+  Saa -- Kai [ label = "3290" ];
+  Bay -- Che [ label = "3720" ];
+  Bra -- Mag [ label = "3290" ];
+  Dre -- Lei [ label = "3720" ];
+  Che -- Dre [ label = "3290" ];
+  Bie -- Sie [ label = "3720" ];
+  Old -- Wes [ label = "4150" ];
+  Old -- Bre [ label = "3290" ];
+  Dar -- Fra [ label = "3290" ];
+  Sie -- Kob [ label = "3290" ];
+  Erf -- Lei [ label = "3720" ];
+  Bra -- Ham [ label = "3720" ];
+  Gie -- Kas [ label = "3720" ];
+  Kon -- Stu [ label = "3720" ];
+  Fle -- Kie [ label = "3290" ];
+  Mag -- Sch [ label = "4150" ];
+  Ful -- Kas [ label = "3720" ];
+  Nor -- Old [ label = "3720" ];
+  Aug -- Mu [ label = "3290" ];
+  Fre -- Kon [ label = "3720" ];
+  Kar -- Stu [ label = "3290" ];
+  Gre -- Ber [ label = "4150" ];
+  Wes -- Ess [ label = "3290" ];
+  Sch -- Ber [ label = "4150" ];
+  Kas -- Erf [ label = "3720" ];
+  Nor -- Wes [ label = "4150" ];
+  Dre -- Ber [ label = "4150" ];
+  Pas -- Mu [ label = "3720" ];
+  Bay -- Nue [ label = "3290" ];
+  Nue -- Mu [ label = "3720" ];
+  Kas -- Bra [ label = "3720" ];
+  Wes -- Aac [ label = "3720" ];
+  Ful -- Gie [ label = "3290" ];
+  Kar -- Man [ label = "3290" ];
+  Dor -- Ess [ label = "3290" ];
+  Reg -- Mu [ label = "3720" ];
+  Bie -- Han [ label = "3720" ];
+  Mue -- Dor [ label = "3290" ];
+  Ulm -- Stu [ label = "3290" ];
+  Bay -- Lei [ label = "4150" ];
+  Che -- Erf [ label = "3720" ];
+  Kem -- Kon [ label = "3720" ];
+  Sie -- Dor [ label = "3720" ];
+  Wue -- Erf [ label = "3720" ];
+  Mag -- Ber [ label = "3720" ];
+  Bre -- Bre [ label = "3290" ];
+  Bra -- Han [ label = "3720" ];
+  Koe -- Due [ label = "3290" ];
+  Kem -- Mu [ label = "3720" ];
+  Kai -- Kob [ label = "3720" ];
+  Tri -- Aac [ label = "3720" ];
+  Ham -- Sch [ label = "3720" ];
+  Wue -- Nue [ label = "3720" ];
+  Bra -- Bie [ label = "3720" ];
+  Osn -- Old [ label = "3720" ];
+  Osn -- Mue [ label = "3290" ];
+}
