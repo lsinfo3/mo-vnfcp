@@ -1,19 +1,23 @@
-import de.lexej.VNFP.algo.GreedyCentrality;
-import de.lexej.VNFP.algo.PSA;
-import de.lexej.VNFP.algo.ParetoFrontier;
-import de.lexej.VNFP.gui.GuiApp;
-import de.lexej.VNFP.model.NetworkGraph;
-import de.lexej.VNFP.model.Node;
-import de.lexej.VNFP.model.TrafficRequest;
-import de.lexej.VNFP.model.VnfLib;
-import de.lexej.VNFP.model.factory.*;
-import de.lexej.VNFP.model.solution.Solution;
-import de.lexej.VNFP.util.Config;
+import de.uniwue.VNFP.algo.GreedyCentrality;
+import de.uniwue.VNFP.algo.PSA;
+import de.uniwue.VNFP.algo.ParetoFrontier;
+import de.uniwue.VNFP.gui.GuiApp;
+import de.uniwue.VNFP.model.NetworkGraph;
+import de.uniwue.VNFP.model.Node;
+import de.uniwue.VNFP.model.TrafficRequest;
+import de.uniwue.VNFP.model.VnfLib;
+import de.uniwue.VNFP.model.factory.TopologyFileReader;
+import de.uniwue.VNFP.model.factory.TrafficRequestsReader;
+import de.uniwue.VNFP.model.factory.ViterbiSolutionReader;
+import de.uniwue.VNFP.model.factory.VnfLibReader;
+import de.uniwue.VNFP.model.solution.Solution;
+import de.uniwue.VNFP.util.Config;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -32,12 +36,12 @@ public class Main {
 
         //Comparison.main(args);
         //ParameterEval.main(args);
-        //runPSA(args.length > 0 ? args[0] : null);
+        runPSA(args.length > 0 ? args[0] : null);
         //printTopologyDetails();
         //testGreedy();
         //testScriptEngine();
         //checkRequests();
-        testCplexSolution();
+        //testCplexSolution();
         //createRandomVnfSeqs(462);
         //createMaxDelayFromTopology();
     }

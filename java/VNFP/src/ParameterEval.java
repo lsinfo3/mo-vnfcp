@@ -1,11 +1,11 @@
-import de.lexej.VNFP.algo.PSA;
-import de.lexej.VNFP.model.NetworkGraph;
-import de.lexej.VNFP.model.TrafficRequest;
-import de.lexej.VNFP.model.VnfLib;
-import de.lexej.VNFP.model.factory.TopologyFileReader;
-import de.lexej.VNFP.model.factory.TrafficRequestsReader;
-import de.lexej.VNFP.model.factory.VnfLibReader;
-import de.lexej.VNFP.util.Config;
+import de.uniwue.VNFP.algo.PSA;
+import de.uniwue.VNFP.model.NetworkGraph;
+import de.uniwue.VNFP.model.TrafficRequest;
+import de.uniwue.VNFP.model.VnfLib;
+import de.uniwue.VNFP.model.factory.TopologyFileReader;
+import de.uniwue.VNFP.model.factory.TrafficRequestsReader;
+import de.uniwue.VNFP.model.factory.VnfLibReader;
+import de.uniwue.VNFP.util.Config;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
@@ -32,9 +32,9 @@ public class ParameterEval {
 
 
         String[] _problem = new String[]{
-                //"BCAB15",
+                "BCAB15",
                 //"geant2",
-                "germany2"
+                //"germany2"
         };
         for (String problem : _problem) {
             String basePath = "basePath=\"res/problem_instances/"+problem+"\"";
@@ -42,8 +42,12 @@ public class ParameterEval {
 
 
             String[] _s = new String[]{
-                    //"s=8",
-                    "s=24"
+                    "s=1",
+                    "s=2",
+                    "s=4",
+                    "s=8",
+                    "s=16",
+                    //"s=24"
             };
         for (String s : _s) {
 
@@ -53,7 +57,7 @@ public class ParameterEval {
             _loops = new String[]{
                     // m; rho; runtime
                     //"m=500; rho=0.85; runtime=10",
-                    "m=500; rho=0.85; runtime=60"
+                    "m=500; rho=0.80; runtime=20"
             };
         for (String loops : _loops) {
 
@@ -73,18 +77,18 @@ public class ParameterEval {
 
 
             String[] _prep = new String[]{
-                    "prepMode=LEAST_CPU",
+                    //"prepMode=LEAST_CPU",
                     "prepMode=LEAST_DELAY",
-                    "prepMode=SHORT_PSA",
-                    "prepMode=RAND"
+                    //"prepMode=SHORT_PSA",
+                    //"prepMode=RAND"
             };
         for (String prep : _prep) {
 
 
 
             String[] _reassign = new String[]{
-                    "pReassignVnf=0",
-                    "pReassignVnf=0.1",
+                    //"pReassignVnf=0",
+                    //"pReassignVnf=0.1",
 
                     "\npmin = 0.0\n" +
                             "pmax = 1.0\n" +
@@ -99,9 +103,9 @@ public class ParameterEval {
 
 
             String[] _newInstance = new String[]{
-                    "pNewInstance=0",
+                    //"pNewInstance=0",
                     "pNewInstance=0.5*pReassignVnf",
-                    "pNewInstance=pReassignVnf"
+                    //"pNewInstance=pReassignVnf"
             };
         for (String newInstance : _newInstance) {
 
@@ -133,7 +137,8 @@ public class ParameterEval {
             String mTxt = loops.split("=")[1].split(";")[0];
             String rhoTxt = loops.split("=")[2].split(";")[0];
             String runtimeTxt = loops.split("=")[3];
-            String outFolder = "/home/debian/eirene/home/alex/MA/eval/out/" + prefix + "/" + problem + "/"
+            String outFolder = "/home/alex/w/misc/ma/eval/out/" + prefix + "/" + problem + "/"
+            //String outFolder = "/home/debian/eirene/home/alex/MA/eval/out/" + prefix + "/" + problem + "/"
                     + s.split("=", 2)[1].replace("_", "").replace("*", "")
                     + "_" + mTxt.replace("_", "").replace("*", "")
                     + "_" + rhoTxt.replace("_", "").replace("*", "")

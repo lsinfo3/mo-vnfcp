@@ -1,13 +1,13 @@
-import de.lexej.VNFP.algo.ParetoFrontier;
-import de.lexej.VNFP.gui.GuiApp;
-import de.lexej.VNFP.model.NetworkGraph;
-import de.lexej.VNFP.model.TrafficRequest;
-import de.lexej.VNFP.model.VnfLib;
-import de.lexej.VNFP.model.factory.FlowPlacementReader;
-import de.lexej.VNFP.model.factory.TopologyFileReader;
-import de.lexej.VNFP.model.factory.TrafficRequestsReader;
-import de.lexej.VNFP.model.factory.VnfLibReader;
-import de.lexej.VNFP.model.solution.Solution;
+import de.uniwue.VNFP.algo.ParetoFrontier;
+import de.uniwue.VNFP.gui.GuiApp;
+import de.uniwue.VNFP.model.NetworkGraph;
+import de.uniwue.VNFP.model.TrafficRequest;
+import de.uniwue.VNFP.model.VnfLib;
+import de.uniwue.VNFP.model.factory.FlowPlacementReader;
+import de.uniwue.VNFP.model.factory.TopologyFileReader;
+import de.uniwue.VNFP.model.factory.TrafficRequestsReader;
+import de.uniwue.VNFP.model.factory.VnfLibReader;
+import de.uniwue.VNFP.model.solution.Solution;
 
 import java.util.Locale;
 
@@ -25,7 +25,7 @@ public class TestGui {
         String input_topology = "res/problem_instances/BCAB15/topology-160";
         String input_requests = "res/problem_instances/BCAB15/requests-all";
         String input_vnfs = "res/problem_instances/BCAB15/vnfLib-orig";
-        String placementFlows = "/home/alex/w/MA/eval/out/1480880061098/BCAB15/8_500_0.85_40_50_1_LEASTCPU_0_0_true/2/placementFlows";
+        String placementFlows = "/home/alex/w/misc/ma/eval/out/1480880061098/BCAB15/8_500_0.85_40_50_1_LEASTCPU_0_0_true/2/placementFlows";
 
         NetworkGraph ng = TopologyFileReader.readFromFile(input_topology);
         VnfLib vnfLib = VnfLibReader.readFromFile(input_vnfs);

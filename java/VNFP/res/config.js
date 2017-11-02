@@ -34,19 +34,25 @@ requestsFile = "requests"
 // (Absolute paths won't be resolved against the basePath.)
 // ---
 showGui = false
-//baseFolder = "/tmp/"
-baseFolder = "/home/alex/MA/eval/frontVerlauf/" + new Date().getTime() + "/"
-paretoFrontier = baseFolder + "psa_pareto_frontier" // CSV of pareto frontier (objective space)
-paretoFrontierDevObs = baseFolder + "psa_pareto_frontier_developement" // CSV of pareto frontier developement over time (objective space)
-results = baseFolder + "psa_results" // human readable pareto frontier
-vnfLoads = baseFolder + "psa_vnf_loads" // CSV of a single solution's VNF loads at every temperature level
-vnfDetails = baseFolder + "psa_vnf_details" // Detailed CSV-overview of a single solution's VNF, including differences and node locations
-solutionSets = baseFolder + "psa_solution_sets" // CSV of the solution set at every temperature change
+executionProgress = true
+baseFolder = "/tmp/psa/"
+//baseFolder = "/home/alex/w/MA/eval/frontVerlauf/" + new Date().getTime() + "/"
 
+// Main frontier:
+paretoFrontier = baseFolder + "psa_pareto_frontier" // CSV of pareto frontier (objective space)
+results = baseFolder + "psa_results" // human readable pareto frontier
+
+// Actual placement:
 placementNodes = baseFolder + "psa_placement_nodes" // for each node: used resources, remaining resources, vnf list
 placementLinks = baseFolder + "psa_placement_links" // for each link: used bandwidth, remaining bandwidth, flow list
 placementVnfs = baseFolder + "psa_placement_vnfs" // for each vnf: load, used capacity, remaining capacity, flow list
 placementFlows = baseFolder + "psa_placement_flows" // for each request: delay, route (list of nodes, NFs are applied at nodes in [brackets])
+
+// Debug:
+//paretoFrontierDevObs = baseFolder + "psa_pareto_frontier_developement" // CSV of pareto frontier developement over time (objective space)
+//vnfLoads = baseFolder + "psa_vnf_loads" // CSV of a single solution's VNF loads at every temperature level
+//vnfDetails = baseFolder + "psa_vnf_details" // Detailed CSV-overview of a single solution's VNF, including differences and node locations
+//solutionSets = baseFolder + "psa_solution_sets" // CSV of the solution set at every temperature change
 
 // Method for retrieving the initial solution set:
 // Possible values: RAND, SHORT_PSA, LEAST_DELAY, LEAST_CPU
@@ -101,6 +107,7 @@ prepMode = LEAST_DELAY
  - NUMBER_OF_RAM_VIOLATIONS
  - NUMBER_OF_HDD_VIOLATIONS
  - NUMBER_OF_EXCESSIVE_VNFS
+ - NUMBER_OF_CONGESTED_LINKS
  - TOTAL_OVERLOADED_VNF_CAPACITY
  - TOTAL_ROOTED_EXCESSIVE_VNF_CAPACITY
  */
@@ -119,7 +126,7 @@ function unfeasibleVector(v) {
         v[MEAN_DELAY_INDEX],
         v[MEAN_HOPS_INDEX],
         v[MEAN_INVERSE_LOAD_INDEX],
-        v[NUMBER_OF_DELAY_VIOLATIONS] + v[NUMBER_OF_CPU_VIOLATIONS] + v[NUMBER_OF_RAM_VIOLATIONS] + v[NUMBER_OF_HDD_VIOLATIONS],
+        v[NUMBER_OF_DELAY_VIOLATIONS] + v[NUMBER_OF_CPU_VIOLATIONS] + v[NUMBER_OF_RAM_VIOLATIONS] + v[NUMBER_OF_HDD_VIOLATIONS] + v[NUMBER_OF_CONGESTED_LINKS],
         v[TOTAL_OVERLOADED_VNF_CAPACITY],
         v[TOTAL_ROOTED_EXCESSIVE_VNF_CAPACITY]
     ]
@@ -128,16 +135,16 @@ function unfeasibleVector(v) {
 // Probability for replacing a VNF instance instead of a single flow:
 // The current temperature is stored in the variable 't'.
 // The variable 'i' contains the iteration number (0 <= i < numberOfTemperatureLevels).
-pmin = 0.0
-pmax = 1.0
+pmin = 0.2
+pmax = 0.8
 i1 = 0.2 * numberOfTemperatureLevels
 i2 = 0.8 * numberOfTemperatureLevels
 pReassignVnf = (i2 - i)/(i2 - i1) * (pmax - pmin) + pmin
 pReassignVnf = Math.max(pmin, Math.min(pmax, pReassignVnf))
-pReassignVnf = 0.1
+//pReassignVnf = 0.2
 
 // Probability for creating new VNF instances while routing:
-pNewInstance = 0
+pNewInstance = pReassignVnf/2.0
 
 // Acceptance Probabilities:
 // The variables 'better' and 'incomp' contain the corresponding numbers of generated neighbour solutions

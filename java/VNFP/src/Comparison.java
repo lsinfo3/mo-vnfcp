@@ -1,11 +1,11 @@
-import de.lexej.VNFP.algo.PSA;
-import de.lexej.VNFP.model.*;
-import de.lexej.VNFP.model.factory.TopologyFileReader;
-import de.lexej.VNFP.model.factory.TrafficRequestsReader;
-import de.lexej.VNFP.model.factory.ViterbiSolutionReader;
-import de.lexej.VNFP.model.factory.VnfLibReader;
-import de.lexej.VNFP.model.solution.Solution;
-import de.lexej.VNFP.util.Config;
+import de.uniwue.VNFP.algo.PSA;
+import de.uniwue.VNFP.model.*;
+import de.uniwue.VNFP.model.factory.TopologyFileReader;
+import de.uniwue.VNFP.model.factory.TrafficRequestsReader;
+import de.uniwue.VNFP.model.factory.ViterbiSolutionReader;
+import de.uniwue.VNFP.model.factory.VnfLibReader;
+import de.uniwue.VNFP.model.solution.Solution;
+import de.uniwue.VNFP.util.Config;
 
 import java.io.*;
 import java.nio.file.*;
@@ -54,11 +54,15 @@ public class Comparison {
                 String outTopoPSA = "res/problem_instances/" + problem + "/topology-fixed-psa";
                 String outTopoViterbi = "res/problem_instances/" + problem + "/topology-fixed-viterbi";
 
+                String inVnfs = "res/problem_instances/" + problem + "/vnfLib";
+                String outVnfsPSA = "res/problem_instances/" + problem + "/vnfLib-fixed-psa";
+                String outVnfsViterbi = "res/problem_instances/" + problem + "/vnfLib-fixed-viterbi";
+
                 String inReq = outReqsOrig;
                 String outReqPSA = outFolder + "/psa-requests";
                 String outReqViterbi = outFolder + "/viterbi-requests";
 
-                TranslateTopologyToViterbiFormat.translate(inTopo, outTopoPSA, outTopoViterbi, inReq, outReqPSA, outReqViterbi);
+                TranslateTopologyToViterbiFormat.translate(inTopo, outTopoPSA, outTopoViterbi, inVnfs, outVnfsPSA, outVnfsViterbi, inReq, outReqPSA, outReqViterbi);
 
 
 
