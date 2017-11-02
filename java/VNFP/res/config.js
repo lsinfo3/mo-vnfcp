@@ -8,15 +8,15 @@
  */
 
 // PSA Config:
-s = 8
+s = 4
 m = 500
 tmax = 50
 tmin = 1
-rho = 0.85
+rho = 0.75
 
 // If runtime is set and > 0, the algorithm's execution time is set to that value (in seconds).
 // In that case, the parameter 'm' is ignored.
-runtime = 10
+runtime = 5
 
 numberOfTemperatureLevels = Math.ceil(Math.log(tmin / tmax) / Math.log(rho))
 
@@ -25,9 +25,9 @@ basePath = "res/problem_instances/BCAB15"
 
 // PSA Input:
 // (Absolute paths won't be resolved against the basePath.)
-topologyFile = "topology"
-vnfLibFile = "vnfLib"
-requestsFile = "requests"
+topologyFile = "outTopo"
+vnfLibFile = "outVnfs"
+requestsFile = "outReqs"
 
 // Output:
 // Comment out if the file is not needed.
@@ -57,7 +57,7 @@ placementFlows = baseFolder + "psa_placement_flows" // for each request: delay, 
 // Method for retrieving the initial solution set:
 // Possible values: RAND, SHORT_PSA, LEAST_DELAY, LEAST_CPU
 // (no quotation marks required)
-prepMode = LEAST_DELAY
+prepMode = RAND
 
 /*
  Define objective vectors for determining dominance relationships.
@@ -113,12 +113,14 @@ prepMode = LEAST_DELAY
  */
 function objectiveVector(v) {
     return [
-        v[TOTAL_DELAY],
+        /*v[TOTAL_DELAY],
         v[TOTAL_NUMBER_OF_HOPS],
         v[NUMBER_OF_VNF_INSTANCES],
         v[TOTAL_USED_CPU],
         v[TOTAL_USED_RAM],
-        v[TOTAL_USED_HDD]
+        v[TOTAL_USED_HDD]*/
+        v[TOTAL_NUMBER_OF_HOPS],
+        v[NUMBER_OF_VNF_INSTANCES]
     ]
 }
 function unfeasibleVector(v) {
