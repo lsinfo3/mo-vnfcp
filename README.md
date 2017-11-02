@@ -6,6 +6,11 @@ This repository contains the sources used for the work published in:
 > “A multi-objective heuristic for the optimization of virtual network function chain placement,”
 > in Proceedings of the 29th International Teletraffic Congress (ITC), Genoa, Italy, 2017.
 
+# Dependencies
+
+The project was compiled and tested with Java Version 9.
+Some functions require the JavaFX Runtime, which should be included in JDK bundles, but may need a separate installation if only a Java Runtime Environment was installed.
+
 # Notes
 The problem instance `BCAB15` refers to `Internet2` in the paper.
 Other problem instances use the same names as in the paper.
