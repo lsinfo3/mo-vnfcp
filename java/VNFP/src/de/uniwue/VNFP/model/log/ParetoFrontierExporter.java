@@ -31,10 +31,12 @@ public class ParetoFrontierExporter implements PSAEventLogger {
     @Override
     public void psaEnd(ParetoFrontier paretoFrontier) {
         try {
-            w.write(paretoFrontier.get(0).toStringCsv()[0]);
+            w.write("ID;" + paretoFrontier.get(0).toStringCsv()[0]);
+            int id = 0;
             for (Solution s : paretoFrontier) {
                 w.write("\n");
-                w.write(s.toStringCsv()[1]);
+                w.write(id + ";" + s.toStringCsv()[1]);
+                id++;
             }
             w.write("\n");
             w.close();

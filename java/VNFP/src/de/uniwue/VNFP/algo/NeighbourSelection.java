@@ -5,7 +5,6 @@ import de.uniwue.VNFP.model.solution.NodeAssignment;
 import de.uniwue.VNFP.model.solution.Solution;
 import de.uniwue.VNFP.model.solution.TrafficAssignment;
 import de.uniwue.VNFP.model.solution.VnfInstances;
-import de.uniwue.VNFP.model.solution.overview.LinkOverview;
 import de.uniwue.VNFP.model.solution.overview.NodeOverview;
 import de.uniwue.VNFP.util.Config;
 import de.uniwue.VNFP.util.Median;
@@ -17,8 +16,6 @@ import java.util.function.IntToDoubleFunction;
 import java.util.function.ToDoubleFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import static de.uniwue.VNFP.model.solution.Solution.Vals.*;
 
 /**
  * This class provides static methods to search for new neighbours to given solutions.
@@ -39,6 +36,7 @@ public class NeighbourSelection {
      */
     public static Solution replaceVnfInstance(Solution neigh, double pNewInstance, Random r) {
         VnfInstances draw;
+        Objs o = neigh.obj;
 
         // Weight settings:
         ToDoubleFunction<NodeAssignment> weightMapper;
@@ -59,7 +57,7 @@ public class NeighbourSelection {
         }
 
         // Unfeasible solution? -> Remove problems first.
-        if (neigh.vals[NUMBER_OF_EXCESSIVE_VNFS.i] > 0.0) {
+        if (neigh.vals[o.NUMBER_OF_EXCESSIVE_VNFS.i] > 0.0) {
             VnfInstances[] choices = neigh.vnfMap.entrySet().stream()
                     .filter(e -> e.getKey().maxInstances > -1 && e.getValue().getTotal() > e.getKey().maxInstances)
                     .flatMap(e -> e.getValue().locations.values().stream())
@@ -68,9 +66,9 @@ public class NeighbourSelection {
 
             draw = choices[r.nextInt(choices.length)];
         }
-        else if (neigh.vals[NUMBER_OF_HDD_VIOLATIONS.i] > 0.0 || neigh.vals[NUMBER_OF_RAM_VIOLATIONS.i] > 0.0 || neigh.vals[NUMBER_OF_CPU_VIOLATIONS.i] > 0.0) {
+        else if (neigh.vals[o.NUMBER_OF_RESOURCE_VIOLATIONS.i] > 0.0) {
             VnfInstances[] choices = neigh.nodeMap.values().stream()
-                    .filter(ov -> ov.remainingHdd() < 0.0 || ov.remainingRam() < 0.0 || ov.remainingCpu() < 0.0)
+                    .filter(ov -> Arrays.stream(ov.remainingResources()).anyMatch(d -> d < 0.0))
                     .flatMap(ov -> ov.getVnfInstances().values().stream())
                     .filter(inst -> inst.loads.length > 0)
                     .toArray(VnfInstances[]::new);
@@ -196,6 +194,7 @@ public class NeighbourSelection {
      * @return A new solution, with 1 Flow being altered.
      */
     public static Solution replaceTrafficAssignment(Solution neigh, double pNewInstance, Random r) {
+        Objs o = neigh.obj;
         TrafficRequest[] reqs = Arrays.copyOf(neigh.requests, neigh.requests.length);
         TrafficAssignment[] assigs = Arrays.copyOf(neigh.assignments, neigh.assignments.length);
         int draw = -1;
@@ -219,13 +218,13 @@ public class NeighbourSelection {
         }
 
         // Unfeasible solution? -> Remove problems first.
-        if (neigh.vals[NUMBER_OF_DELAY_VIOLATIONS.i] > 0.0) {
+        if (neigh.vals[o.NUMBER_OF_DELAY_VIOLATIONS.i] > 0.0) {
             int[] choices = IntStream.range(0, assigs.length)
                     .filter(i -> assigs[i].delay > assigs[i].request.expectedDelay)
                     .toArray();
             draw = choices[r.nextInt(choices.length)];
         }
-        else if (neigh.vals[NUMBER_OF_CONGESTED_LINKS.i] > 0.0) {
+        else if (neigh.vals[o.NUMBER_OF_CONGESTED_LINKS.i] > 0.0) {
             HashSet<Link> congested = neigh.linkMap.values().stream().filter(l -> l.remainingBandwidth() < 0.0).map(l -> l.link).collect(Collectors.toCollection(HashSet::new));
             int[] choices = IntStream.range(0, assigs.length)
                     .filter(i -> Arrays.stream(assigs[i].path).map(p -> p.prev).anyMatch(congested::contains))
@@ -295,7 +294,7 @@ public class NeighbourSelection {
                 boolean createNewInstances = forceNewInstances || (r.nextDouble() <= pNewInstance / reqs.length);
 
                 // For each VNF inside the request... prepare initial weights as delay and number of hops:
-                for (int i = 0; i < req.vnfSequence.length; i++) {
+                outerLoop: for (int i = 0; i < req.vnfSequence.length; i++) {
                     VNF vnf = req.vnfSequence[i];
                     ArrayList<ObjectWeights<Node>> list = new ArrayList<>();
                     nodeWeights[i + 1] = list;
@@ -309,8 +308,10 @@ public class NeighbourSelection {
                     if (createNewInstances) {
                         for (NodeOverview nodeOv : neigh.nodeMap.values()) {
                             // Are there enough ressources for the new instance?
-                            if (nodeOv.node.cpuCapacity < vnf.cpuRequired || nodeOv.node.ramCapacity < vnf.ramRequired || nodeOv.node.hddCapacity < vnf.hddRequired) {
-                                continue;
+                            for (int j = 0; j < nodeOv.node.resources.length; j++) {
+                                if (nodeOv.node.resources[j] < vnf.reqResources[j]) {
+                                    continue outerLoop;
+                                }
                             }
 
                             // Find the 'best' connection to the nodes of the last step:
@@ -339,8 +340,10 @@ public class NeighbourSelection {
                         if (list.isEmpty()) {
                             for (NodeOverview nodeOv : neigh.nodeMap.values()) {
                                 // Are there still enough ressources for the new instance?
-                                if (nodeOv.remainingCpu() < vnf.cpuRequired || nodeOv.remainingRam() < vnf.ramRequired || nodeOv.remainingHdd() < vnf.hddRequired) {
-                                    continue;
+                                for (int j = 0; j < nodeOv.node.resources.length; j++) {
+                                    if (nodeOv.remainingResources()[j] < vnf.reqResources[j]) {
+                                        continue outerLoop;
+                                    }
                                 }
 
                                 // Find the 'best' connection to the nodes of the last step:
@@ -351,8 +354,10 @@ public class NeighbourSelection {
                         if (list.isEmpty()) {
                             for (NodeOverview nodeOv : neigh.nodeMap.values()) {
                                 // Are there enough ressources for the new instance?
-                                if (nodeOv.node.cpuCapacity < vnf.cpuRequired || nodeOv.node.ramCapacity < vnf.ramRequired || nodeOv.node.hddCapacity < vnf.hddRequired) {
-                                    continue;
+                                for (int j = 0; j < nodeOv.node.resources.length; j++) {
+                                    if (nodeOv.node.resources[j] < vnf.reqResources[j]) {
+                                        continue outerLoop;
+                                    }
                                 }
 
                                 // Find the 'best' connection to the nodes of the last step:
@@ -653,7 +658,7 @@ public class NeighbourSelection {
      * @return A new solution, including the given requests.
      */
     public static Solution randomSelection(TrafficRequest[] reqs, Solution neigh, Random r) {
-        Node[] possibleNodes = neigh.graph.getNodes().values().stream().filter(n -> n.cpuCapacity > 0.0).toArray(Node[]::new);
+        Node[] possibleNodes = neigh.graph.getNodes().values().stream().filter(n -> n.resources[0] > 0.0).toArray(Node[]::new);
         if (possibleNodes.length == 0) {
             possibleNodes = neigh.graph.getNodes().values().toArray(new Node[neigh.graph.getNodes().size()]);
         }

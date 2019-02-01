@@ -37,7 +37,7 @@ public class FlowUtils {
         // Actual bfs:
         while (!q.isEmpty()) {
             Node.Att u = q.poll();
-            for (Link l : u.node.getNeighbours()) {
+            for (Link l : u.node.getNeighbors()) {
                 Node vNode = l.getOther(u.node);
 
                 // If the neighbor has not been visited yet:
@@ -75,7 +75,7 @@ public class FlowUtils {
             Node.Att u = q.poll();
             if (u.color == 2) continue;
 
-            for (Link l : u.node.getNeighbours()) {
+            for (Link l : u.node.getNeighbors()) {
                 Node vNode = l.getOther(u.node);
                 Node.Att v = (att.containsKey(vNode) ? att.get(vNode) : new Node.Att(vNode, 0, Double.POSITIVE_INFINITY, null));
 

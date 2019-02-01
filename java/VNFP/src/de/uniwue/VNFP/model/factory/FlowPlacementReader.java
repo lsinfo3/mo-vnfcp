@@ -24,36 +24,34 @@ import java.util.regex.Pattern;
  * @author alex
  */
 public class FlowPlacementReader {
-    private static Pattern pLine = Pattern.compile("(\\d+);(\\d+);([^ ;,\\]\\[]+);([^ ;,\\]\\[]+);(\\d+(?:\\.\\d+)?);([^ ;,]+(?:,[^ ;,]+)*)");
+    private static Pattern pLine = Pattern.compile("(\\d+);(\\d+);([^ ;,\\]\\[]+);([^ ;,\\]\\[]+);(\\d+(?:\\.\\d+)?);([^ ;]*);([^ ;,]+(?:,[^ ;,]+)*)");
     private static Pattern pRouteNode = Pattern.compile("\\[([^ ;,\\[\\]]+)\\]");
 
     /**
      * Reads the traffic routes from the "placementFlows" output file of the PSA algorithm.
      * The IDs of the given TrafficRequest-Array must match the flowIDs in the given CSV file.
      *
-     * @param ng             NetworkGraph of the solved problem.
-     * @param reqs           The solved traffic requests.
-     *                       The requests' IDs must match the flowIDs in the CSV file.
+     * @param pi             The solved ProblemInstance. The requests' IDs must match the flowIDs in the CSV file.
      * @param placementFlows The path of the "placementFlows" CSV output file.
      * @return A ParetoFrontier object with all imported solutions.
      * @throws IOException In case of errors while parsing the file.
      */
-    public static ParetoFrontier readFromCsv(NetworkGraph ng, TrafficRequest[] reqs, Path placementFlows) throws IOException {
-        return readFromCsv(ng, reqs, placementFlows.toAbsolutePath().toString());
+    public static ParetoFrontier readFromCsv(ProblemInstance pi, Path placementFlows) throws IOException {
+        return readFromCsv(pi, placementFlows.toAbsolutePath().toString());
     }
 
     /**
      * Reads the traffic routes from the "placementFlows" output file of the PSA algorithm.
      * The IDs of the given TrafficRequest-Array must match the flowIDs in the given CSV file.
      *
-     * @param ng             NetworkGraph of the solved problem.
-     * @param reqs           The solved traffic requests.
-     *                       The requests' IDs must match the flowIDs in the CSV file.
+     * @param pi             The solved ProblemInstance. The requests' IDs must match the flowIDs in the CSV file.
      * @param placementFlows The path of the "placementFlows" CSV output file.
      * @return A ParetoFrontier object with all imported solutions.
      * @throws IOException In case of errors while parsing the file.
      */
-    public static ParetoFrontier readFromCsv(NetworkGraph ng, TrafficRequest[] reqs, String placementFlows) throws IOException {
+    public static ParetoFrontier readFromCsv(ProblemInstance pi, String placementFlows) throws IOException {
+        NetworkGraph ng = pi.ng;
+        TrafficRequest[] reqs = pi.reqs;
         ParetoFrontier front = new ParetoFrontier();
 
         HashMap<Integer, TrafficRequest> idToReq = new HashMap<>();
@@ -71,9 +69,9 @@ public class FlowPlacementReader {
             nr++;
 
             if (nr == 0) {
-                if (!line.trim().toLowerCase().equals("solutionnumber;flowid;ingress;egress;delay;route")) {
+                if (!line.trim().toLowerCase().equals("solutionnumber;flowid;ingress;egress;delay;vnfs;route")) {
                     lnr.close();
-                    throw new IOException("The header must equal 'solutionNumber;flowID;ingress;egress;delay;route'");
+                    throw new IOException("The header must equal 'solutionNumber;flowID;ingress;egress;delay;vnfs;route' (but is '"+line+"')");
                 }
                 continue;
             }
@@ -89,7 +87,8 @@ public class FlowPlacementReader {
             String ingress = m.group(3);
             String egress = m.group(4);
             double delay = Double.parseDouble(m.group(5));
-            String[] route = m.group(6).split(",");
+            String[] vnfs = m.group(6).split(",");
+            String[] route = m.group(7).split(",");
 
             // Save last solution into Pareto frontier:
             if (lastSolution != -1 && solutionNumber != lastSolution) {
@@ -97,7 +96,7 @@ public class FlowPlacementReader {
                     throw new IOException("Not enough routes in solutionNumber " + lastSolution + " given: expected="+reqs.length+", given="+tAssigs.size());
                 }
 
-                Solution s = Solution.getInstance(ng, reqs, tAssigs.toArray(new TrafficAssignment[tAssigs.size()]));
+                Solution s = Solution.getInstance(pi, tAssigs.toArray(new TrafficAssignment[tAssigs.size()]));
                 front.add(s);
                 tAssigs.clear();
             }
@@ -145,7 +144,7 @@ public class FlowPlacementReader {
                 if (i > 0) {
                     Node lastNode = nAssigs.get(nAssigs.size() - 1).node;
                     if (!node.equals(lastNode)) {
-                        prev = node.getNeighbours().stream()
+                        prev = node.getNeighbors().stream()
                                 .filter(n -> n.getOther(node).equals(lastNode))
                                 .findFirst().orElse(null);
                         if (prev == null) {
@@ -169,7 +168,7 @@ public class FlowPlacementReader {
                 throw new IOException("Not enough routes in solutionNumber " + lastSolution + " given: expected="+reqs.length+", given="+tAssigs.size());
             }
 
-            Solution s = Solution.getInstance(ng, reqs, tAssigs.toArray(new TrafficAssignment[tAssigs.size()]));
+            Solution s = Solution.getInstance(pi, tAssigs.toArray(new TrafficAssignment[tAssigs.size()]));
             front.add(s);
         }
 

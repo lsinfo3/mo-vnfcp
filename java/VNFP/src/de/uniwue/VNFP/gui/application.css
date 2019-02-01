@@ -1,0 +1,89 @@
+.default-color1.chart-line-symbol {
+    -fx-background-color: transparent, transparent;
+}
+.root{
+    -fx-font-family: "Arial";
+}
+.detailBars{
+         -fx-stroke-width: 0.5;
+}
+.button{
+-fx-background-color:
+        linear-gradient(#f2f2f2, #d6d6d6),
+        linear-gradient(#fcfcfc 0%, #d9d9d9 20%, #d6d6d6 100%),
+        linear-gradient(#dddddd 0%, #f6f6f6 50%);
+    -fx-background-radius: 8,7,6;
+    -fx-background-insets: 0,1,2;
+    -fx-text-fill: black;
+
+}
+.button:hover{
+    -fx-background-color:#a6a6a6;
+}
+.scroll-bar{
+linear-gradient(#f2f2f2, #d6d6d6),
+        linear-gradient(#fcfcfc 0%, #d9d9d9 20%, #d6d6d6 100%),
+        linear-gradient(#dddddd 0%, #f6f6f6 50%);
+    -fx-background-radius: 8,7,6;
+        -fx-background-insets: 0,1,2;
+        -fx-text-fill: black;
+}
+.combo-box .list-cell
+{
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-text-base-color;
+    -fx-padding: 3 0 2 7;
+    -fx-cell-size: 1.66667em;
+}
+
+.combo-box-popup .list-view
+{
+    -fx-background-insets: 0, 1;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 8, 0.0 , 0 , 0 );
+}
+
+.combo-box-popup .list-view .list-cell
+{
+    -fx-padding: 4 0 4 5;
+}
+
+.combo-box-popup .list-view .list-cell:filled:selected, .combo-box-popup .list-view .list-cell:filled:selected:hover
+{
+    -fx-background: -fx-accent;
+    -fx-background-color: -fx-selection-bar;
+    -fx-text-fill: -fx-selection-bar-text;
+}
+
+.combo-box-popup .list-view .list-cell:filled:hover
+{
+    -fx-text-fill: -fx-text-inner-color;
+}
+
+.combo-box-base
+{
+   -fx-background-radius: 6.4, 4, 5, 3;
+   -fx-background-insets: -1.4, 0, 1, 2;
+}
+
+.combo-box-base:hover
+{
+    -fx-color: -fx-hover-base;
+}
+
+.combo-box-base:showing
+{
+    -fx-color: -fx-pressed-base;
+}
+.combo-box-base:disabled {
+    -fx-opacity: .4;
+}
+.table-row-cell:priority-low {
+    -fx-background-color:#c9c9c9;
+}
+.table-row-cell:selected {
+   -fx-background-color: red;
+}
+.table-row-cell:selected .text {
+       -fx-fill: black ;
+
+}

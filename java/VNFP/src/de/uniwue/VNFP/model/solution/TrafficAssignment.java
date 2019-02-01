@@ -81,7 +81,7 @@ public class TrafficAssignment {
             if (i != 0) {
                 int _i = i;
                 if (nAssig.node.equals(path[i-1].node)) continue;
-                if (path[i-1].node.getNeighbours().stream()
+                if (path[i-1].node.getNeighbors().stream()
                         .anyMatch(l -> l.getOther(path[_i-1].node).equals(nAssig.node))) continue;
 
                 throw new IllegalArgumentException("no link exists between " + path[i-1].node.name + " and " + nAssig.node.name);
@@ -89,8 +89,7 @@ public class TrafficAssignment {
         }
         this.delay = d;
         this.numberOfHops = hops;
-        d = d - Arrays.stream(request.vnfSequence).mapToDouble(vnf -> vnf.delay).sum();
-        this.delayIndex = d / request.getShortestDelay(ng.getDijkstraBackpointers());
+        this.delayIndex = this.delay / (request.getShortestDelay(ng.getDijkstraBackpointers()) + Arrays.stream(request.vnfSequence).mapToDouble(vnf -> vnf.delay).sum());
         this.hopsIndex = hops / request.getShortestHops(ng.getBfsBackpointers());
 
         if (!path[0].node.equals(request.ingress)) {

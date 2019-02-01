@@ -1,25 +1,17 @@
 import de.uniwue.VNFP.algo.GreedyCentrality;
 import de.uniwue.VNFP.algo.PSA;
-import de.uniwue.VNFP.algo.ParetoFrontier;
-import de.uniwue.VNFP.gui.GuiApp;
-import de.uniwue.VNFP.model.NetworkGraph;
-import de.uniwue.VNFP.model.Node;
-import de.uniwue.VNFP.model.TrafficRequest;
-import de.uniwue.VNFP.model.VnfLib;
+import de.uniwue.VNFP.model.*;
 import de.uniwue.VNFP.model.factory.TopologyFileReader;
 import de.uniwue.VNFP.model.factory.TrafficRequestsReader;
 import de.uniwue.VNFP.model.factory.ViterbiSolutionReader;
 import de.uniwue.VNFP.model.factory.VnfLibReader;
 import de.uniwue.VNFP.model.solution.Solution;
+import de.uniwue.VNFP.model.solution.TrafficAssignment;
 import de.uniwue.VNFP.util.Config;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -36,7 +28,7 @@ public class Main {
 
         //Comparison.main(args);
         //ParameterEval.main(args);
-        runPSA(args.length > 0 ? args[0] : null);
+        PSA.runPSA(args.length > 0 ? args[0] : null);
         //printTopologyDetails();
         //testGreedy();
         //testScriptEngine();
@@ -52,8 +44,8 @@ public class Main {
         String input_requests = "res/problem_instances/"+problem+"/requests";
         String input_vnfs = "res/problem_instances/"+problem+"/vnfLib";
 
-        NetworkGraph ng = TopologyFileReader.readFromFile(input_topology);
         VnfLib vnfLib = VnfLibReader.readFromFile(input_vnfs);
+        NetworkGraph ng = TopologyFileReader.readFromFile(input_topology, vnfLib);
         TrafficRequest[] reqs = TrafficRequestsReader.readFromFile(input_requests, ng, vnfLib);
 
         //System.out.println(ng.toDotFile());
@@ -71,65 +63,20 @@ public class Main {
 
     }
 
-    public static void runPSA(String configPath) throws Exception {
-        if (configPath == null) {
-            configPath = "config.js";
-        }
-        if (!Files.exists(Paths.get(configPath))) {
-            System.out.println("Config file '" + configPath + "' not found.");
-            System.out.println("Creating default config file in:");
-            System.out.println(Paths.get(configPath).toAbsolutePath().toString());
 
-            Config.getInstance().writeConfig(new FileOutputStream(configPath));
-
-            System.out.println("... done. Please review the configuration and run this program again.");
-            return;
-        }
-        else {
-            Config.getInstance(new FileInputStream(configPath));
-        }
-        Config c = Config.getInstance();
-
-        NetworkGraph ng = TopologyFileReader.readFromFile(c.topologyFile);
-        VnfLib vnfLib = VnfLibReader.readFromFile(c.vnfLibFile);
-        TrafficRequest[] reqs = TrafficRequestsReader.readFromFile(c.requestsFile, ng, vnfLib);
-
-        PSA psa = new PSA(ng, reqs, c.s, c.m, c.tmax, c.tmin, c.rho, c.runtime);
-        c.createAllEventLoggers().forEach(psa::addEventLogger);
-
-        ParetoFrontier front;
-        switch (Config.getInstance().prepMode) {
-            case LEAST_CPU:
-                front = psa.runPSAPrepCpu();
-                break;
-            case LEAST_DELAY:
-                front = psa.runPSAPrepDelay();
-                break;
-            case SHORT_PSA:
-                front = psa.runPSAPrepPSA();
-                break;
-            default:
-                front = psa.runPSARand();
-        }
-
-        if (Config.getInstance().showGui) {
-            GuiApp.frontier = front;
-            GuiApp.launch(GuiApp.class);
-        }
-    }
 
     public static void testGreedy() throws Exception {
         String input_topology = "res/problem_instances/germany2/topology";
         String input_requests = "res/problem_instances/germany2/requests";
         String input_vnfs = "res/problem_instances/germany2/vnfLib";
 
-        NetworkGraph ng = TopologyFileReader.readFromFile(input_topology);
         VnfLib vnfLib = VnfLibReader.readFromFile(input_vnfs);
+        NetworkGraph ng = TopologyFileReader.readFromFile(input_topology, vnfLib);
         TrafficRequest[] reqs = TrafficRequestsReader.readFromFile(input_requests, ng, vnfLib);
 
         //System.out.println(ng.toDotFile());
 
-        Solution s = GreedyCentrality.centrality(ng, reqs);
+        Solution s = GreedyCentrality.centrality(ng, vnfLib, reqs);
         System.out.println(s);
         s.printDebugOutput();
     }
@@ -145,14 +92,14 @@ public class Main {
 
         System.out.println("Testing ScriptEngine Performance...");
         long start = System.currentTimeMillis();
-        Config c = Config.getInstance(new FileInputStream("res/customConfig.js"));
-        double[] d = new double[]{1.0, 7.5, 1.3+2.5+6.3+3.1, 6.0};;
+        Config c = Config.getInstance(new FileInputStream("res/config.js"));
+        String[] resources = new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
         for (int i = 0; i < 100000; i++) {
-            //c.pReassignVnf(i);
-            //d = new double[]{d[0] + 1.0, d[1] - 0.5, d[0] + d[1], d[3] * 1.1};
-            c.objectiveVector(new double[Solution.Vals.values().length]);
+            c.objectiveVector(Solution.getInstance(
+                    new ProblemInstance(new NetworkGraph(false), new VnfLib(), new TrafficRequest[0], new Objs(resources)),
+                    new TrafficAssignment[0]
+            ));
         }
-        System.out.println(Arrays.toString(d));
         long dur = System.currentTimeMillis() - start;
         System.out.println("Duration: " + dur + "ms");
         System.out.println(c.topologyFile.toAbsolutePath().toString());
@@ -167,12 +114,12 @@ public class Main {
         String input_viterbi = "/home/alex/Desktop/check_energy_cost/clean/log.sequences";
         String input_vnfs = "res/problem_instances/"+p+"/vnfLib";
 
-        NetworkGraph ng = TopologyFileReader.readFromFile(input_topology);
         VnfLib vnfLib = VnfLibReader.readFromFile(input_vnfs);
+        NetworkGraph ng = TopologyFileReader.readFromFile(input_topology, vnfLib);
         TrafficRequest[] reqs = TrafficRequestsReader.readFromFile(input_requests, ng, vnfLib);
 
         //Solution reference = CplexSolutionReader.readFromCsv(ng, reqs, input_cplex_paths, input_cplex_seqs);
-        Solution reference = ViterbiSolutionReader.readFromCsv(ng, reqs, input_viterbi);
+        Solution reference = ViterbiSolutionReader.readFromCsv(new ProblemInstance(ng, vnfLib, reqs, new Objs(vnfLib.getResources())), input_viterbi);
         System.out.println(reference);
         reference.printDebugOutput();
     }
@@ -182,12 +129,12 @@ public class Main {
         String input_requests = "res/problem_instances/geant/requests";
         String input_vnfs = "res/problem_instances/geant/vnfLib";
 
-        NetworkGraph ng = TopologyFileReader.readFromFile(input_topology);
+        VnfLib vnfLib = VnfLibReader.readFromFile(input_vnfs);
+        NetworkGraph ng = TopologyFileReader.readFromFile(input_topology, vnfLib);
         System.out.println(ng.toDotFile());
 
         System.out.println("\n\n");
 
-        VnfLib vnfLib = VnfLibReader.readFromFile(input_vnfs);
         TrafficRequest[] reqs = TrafficRequestsReader.readFromFile(input_requests, ng, vnfLib);
         //System.out.println(Arrays.toString(reqs).replace(", TrafficRequest", ",\nTrafficRequest"));
         //Arrays.stream(reqs).forEach(p -> System.out.println(p.toOldCsvFormat()));
@@ -232,8 +179,8 @@ public class Main {
         double min_multiplier = 2.0;
         double max_multiplier = 5.0;
 
-        NetworkGraph ng = TopologyFileReader.readFromFile(input_topology);
         VnfLib vnfLib = VnfLibReader.readFromFile(input_vnfs);
+        NetworkGraph ng = TopologyFileReader.readFromFile(input_topology, vnfLib);
         TrafficRequest[] reqs = TrafficRequestsReader.readFromFile(input_requests, ng, vnfLib);
         Random r = new Random();
 
@@ -242,7 +189,7 @@ public class Main {
             double shortest = bp.get(req.ingress).get(req.egress).d;
 
             if (req.vnfSequence.length > 0) {
-                Node[] cpuNodes = ng.getNodes().values().stream().filter(n -> n.cpuCapacity > 0.0).toArray(Node[]::new);
+                Node[] cpuNodes = ng.getNodes().values().stream().filter(n -> n.resources[0] > 0.0).toArray(Node[]::new);
                 Node middle = ng.getShortestMiddleStation(req.ingress, req.egress, cpuNodes, bp);
                 shortest = bp.get(req.ingress).get(middle).d + bp.get(middle).get(req.egress).d;
             }

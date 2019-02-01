@@ -1,3 +1,0 @@
-# Ingress-ID, Egress-ID, Min-Bandwidth, Max-Delay, VNF, VNF, VNF, ...
-0,6,250000,700,firewall,proxy,ids
-6,0,250000,700,ids,proxy,firewall

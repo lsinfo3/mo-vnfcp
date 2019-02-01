@@ -153,7 +153,7 @@ public class TrafficRequest implements Comparable<TrafficRequest> {
 
         // Find a node between ingress and egress that can host VNFs:
         for (Map.Entry<Node, HashMap<Node, Node.Att>> e : backpointer.entrySet()) {
-            if (e.getKey().cpuCapacity > 0.0 || e.getKey().ramCapacity > 0.0 || e.getKey().hddCapacity > 0.0) {
+            if (Arrays.stream(e.getKey().resources).anyMatch(d -> d > 0.0)) {
                 double d = backpointer.get(ingress).get(e.getKey()).d + e.getValue().get(egress).d;
                 if (d < ret) {
                     ret = d;

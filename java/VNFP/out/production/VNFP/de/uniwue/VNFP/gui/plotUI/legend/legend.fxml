@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<?import javafx.geometry.Insets?>
+<StackPane fx:id="colorLegendPane" maxHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="200.0" GridPane.columnIndex="1" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+    <padding>
+        <Insets bottom="10.0" left="20.0" right="10.0" top="10.0" />
+    </padding>
+    <children>
+        <Rectangle fx:id="rect" fill="#1f93ff" height="250.0" stroke="BLACK" strokeType="INSIDE" translateX="2.0" translateY="30.0" width="30.0" StackPane.alignment="TOP_LEFT" />
+        <Line endX="5.0" translateX="32.0" translateY="30.0" StackPane.alignment="TOP_LEFT" />
+        <Line endX="5.0" translateX="32.0" translateY="279.0" StackPane.alignment="TOP_LEFT" />
+        <Label fx:id="colorLegendLabel" text="ColorLabel" StackPane.alignment="TOP_LEFT">
+            <font>
+                <Font name="System Bold" size="13.0" />
+            </font>
+        </Label>
+        <Label fx:id="maxColorValLabel" prefHeight="15.0" text="123.0" translateX="42.0" translateY="23.0" StackPane.alignment="TOP_LEFT" />
+        <Label fx:id="minColorValLabel" prefHeight="15.0" text="0.0" translateX="42.0" translateY="272.0" StackPane.alignment="TOP_LEFT" />
+        <Label text="Feasibility" translateY="300.0" StackPane.alignment="TOP_LEFT">
+            <font>
+                <Font name="System Bold" size="13.0" />
+            </font>
+        </Label>
+        <Rectangle height="7.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" translateX="2.0" translateY="329.0" width="7.0" StackPane.alignment="TOP_LEFT" />
+        <Label fx:id="unfeasibleLabel" prefHeight="15.0" text="unfeasible" translateX="20.0" translateY="325.0" StackPane.alignment="TOP_LEFT" />
+        <Circle radius="5.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" translateX="2.0" translateY="349.0" StackPane.alignment="TOP_LEFT" />
+        <Label text="feasible" translateX="20.0" translateY="345.0" StackPane.alignment="TOP_LEFT" />
+      <StackPane prefHeight="150.0" prefWidth="200.0" />
+    </children>
+</StackPane>

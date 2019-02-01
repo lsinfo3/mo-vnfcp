@@ -1,9 +1,6 @@
 package de.uniwue.VNFP.model;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -14,8 +11,15 @@ import java.util.stream.Collectors;
  * @author alex
  */
 public class VnfLib {
+    private final ArrayList<String> resources;
     private final HashMap<String, VNF[]> vnfs;
     private final HashMap<String, VnfPair> pairs;
+
+    /**
+     * This variable is meant as a shortcut for {@link VnfLib#getResources}.
+     * Its contents can be modified, so use it with caution.
+     */
+    public String[] res;
 
     /**
      * Number of known VNFs.
@@ -26,8 +30,34 @@ public class VnfLib {
      * Initializes a new library.
      */
     public VnfLib() {
+        resources = new ArrayList<>();
         vnfs = new HashMap<>();
         pairs = new HashMap<>();
+        res = new String[0];
+    }
+
+    /**
+     * Adds the given resource String to the collection of known computational resources.
+     *
+     * @param res The name of the new resource (CPU, RAM, ...)
+     */
+    public void addResource(String res) {
+        Objects.requireNonNull(res);
+        for (String res2 : resources) {
+            if (res.toLowerCase().trim().equals(res2.toLowerCase().trim())) {
+                throw new IllegalArgumentException("Resource '" + res + "' is already added");
+            }
+        }
+        resources.add(res);
+
+        this.res = getResources();
+    }
+
+    /**
+     * @return An array-representation of the internal resources set.1
+     */
+    public String[] getResources() {
+        return resources.toArray(new String[resources.size()]);
     }
 
     /**

@@ -65,7 +65,7 @@ public class VnfLoadsExporter implements PSAEventLogger {
             w.write(String.format("\n%s;%s;%.0f;%s;%s",
                     currentTemperature,
                     temperatureIndex,
-                    currentAcceptedSolutions[0].vals[Solution.Vals.NUMBER_OF_VNF_INSTANCES.i],
+                    currentAcceptedSolutions[0].vals[currentAcceptedSolutions[0].obj.NUMBER_OF_VNF_INSTANCES.i],
                     sumLoads / sumCaps,
                     individualLoads.stream().collect(Collectors.joining(","))));
         }

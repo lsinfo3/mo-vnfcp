@@ -42,25 +42,11 @@ public class TrafficRequestsReader {
      * This method reads {@link TrafficRequest}s from a file and
      * returns them in an array.
      * It requires the underlying {@link NetworkGraph}.
-     * <p>
-     * File format:
-     * <pre>
-     *     [Ingress ID],[Egress ID],[Min. Bandwidth (kbps)],[Max. Delay (μs)],[VNF,VNF,VNF,...]
-     *     [Ingress ID],[Egress ID],[Min. Bandwidth (kbps)],[Max. Delay (μs)],[VNF,VNF,VNF,...]
-     *     [Ingress ID],[Egress ID],[Min. Bandwidth (kbps)],[Max. Delay (μs)],[VNF,VNF,VNF,...]
-     *     ...
-     * </pre>
-     * <p>
-     * Example:
-     * <pre>
-     *     # Ingress-ID, Egress-ID, Min-Bandwidth, Max-Delay, VNF, VNF, VNF, ...
-     *     0,1,54021,721,proxy,ids,firewall
-     *     0,2,78440,735,ids,proxy,firewall
-     *     0,3,49523,715,ids,proxy,firewall
-     * </pre>
+     * For the file format, cf. the main class documentation {@link TrafficRequestsReader}.
      *
-     * @param path  Path to the requests file.
-     * @param graph The underlying network graph.
+     * @param path   Path to the requests file.
+     * @param graph  The underlying network graph.
+     * @param vnfLib The VNF library containing all instance and resource types.
      * @return Array of {@link TrafficRequest} objects with all read content.
      * @throws IOException If any errors during file reads occur.
      */
@@ -72,25 +58,11 @@ public class TrafficRequestsReader {
      * This method reads {@link TrafficRequest}s from a file and
      * returns them in an array.
      * It requires the underlying {@link NetworkGraph}.
-     * <p>
-     * File format:
-     * <pre>
-     *     [Ingress ID],[Egress ID],[Min. Bandwidth (kbps)],[Max. Delay (μs)],[VNF,VNF,VNF,...]
-     *     [Ingress ID],[Egress ID],[Min. Bandwidth (kbps)],[Max. Delay (μs)],[VNF,VNF,VNF,...]
-     *     [Ingress ID],[Egress ID],[Min. Bandwidth (kbps)],[Max. Delay (μs)],[VNF,VNF,VNF,...]
-     *     ...
-     * </pre>
-     * <p>
-     * Example:
-     * <pre>
-     *     # Ingress-ID, Egress-ID, Min-Bandwidth, Max-Delay, VNF, VNF, VNF, ...
-     *     0,1,54021,721,proxy,ids,firewall
-     *     0,2,78440,735,ids,proxy,firewall
-     *     0,3,49523,715,ids,proxy,firewall
-     * </pre>
+     * For the file format, cf. the main class documentation {@link TrafficRequestsReader}.
      *
-     * @param path  Path to the requests file.
-     * @param graph The underlying network graph.
+     * @param path   Path to the requests file.
+     * @param graph  The underlying network graph.
+     * @param vnfLib The VNF library containing all instance and resource types.
      * @return Array of {@link TrafficRequest} objects with all read content.
      * @throws IOException If any errors during file reads occur.
      */

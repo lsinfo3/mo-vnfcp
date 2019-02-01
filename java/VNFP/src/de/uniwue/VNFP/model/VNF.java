@@ -1,5 +1,6 @@
 package de.uniwue.VNFP.model;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 import de.uniwue.VNFP.model.solution.VnfInstances;
@@ -17,17 +18,9 @@ public class VNF {
      */
     public final String name;
     /**
-     * Number of required CPU cores for this NF.
+     * Number of required resources of every type (defined by VnfLib).
      */
-    public final double cpuRequired;
-    /**
-     * Amount of required RAM (Mb).
-     */
-    public final double ramRequired;
-    /**
-     * Amount of required HDD capacities (Gb).
-     */
-    public final double hddRequired;
+    public final double[] reqResources;
     /**
      * Latency of this VNF. (μs)
      */
@@ -41,6 +34,10 @@ public class VNF {
      */
     public final long maxInstances;
     /**
+     * Relative weight of the penalty for a request's migration between instances of this type.
+     */
+    public final double flowMigrationPenalty;
+    /**
      * Pointer towards the VNF library that this type is a part of.
      */
     public VnfLib vnfLib;
@@ -48,27 +45,17 @@ public class VNF {
     /**
      * Creates a new instance with the given contents.
      *
-     * @param name               Name of this VNF type, e.g., "Firewall".
-     * @param cpuRequired        Number of required CPU cores for this NF.
-     * @param ramRequired        Amount of required RAM (Mb).
-     * @param hddRequired        Amount of required HDD capacities (Gb).
-     * @param delay              Latency of this VNF. (μs)
-     * @param processingCapacity Capacity of this VNF. (Mbps)
-     * @param maxInstances       Maximum number of allowed instances. -1 represents unbounded.
+     * @param name                 Name of this VNF type, e.g., "Firewall".
+     * @param delay                Latency of this VNF. (μs)
+     * @param processingCapacity   Capacity of this VNF. (Mbps)
+     * @param maxInstances         Maximum number of allowed instances. -1 represents unbounded.
+     * @param flowMigrationPenalty Relative weight of the penalty for a request's migration between instances of this type.
+     * @param reqResources         Number of required resources of every type (defined by VnfLib).
      */
-    public VNF(String name, double cpuRequired, double ramRequired, double hddRequired, double delay, double processingCapacity, long maxInstances) {
+    public VNF(String name, double delay, double processingCapacity, long maxInstances, double flowMigrationPenalty, double[] reqResources) {
         Objects.requireNonNull(name);
         if (name.trim().isEmpty()) {
             throw new IllegalArgumentException("name is empty");
-        }
-        if (cpuRequired < 0.0) {
-            throw new IllegalArgumentException("cpuRequired = " + cpuRequired);
-        }
-        if (ramRequired < 0.0) {
-            throw new IllegalArgumentException("ramRequired = " + ramRequired);
-        }
-        if (hddRequired < 0.0) {
-            throw new IllegalArgumentException("hddRequired = " + hddRequired);
         }
         if (delay < 0.0) {
             throw new IllegalArgumentException("delay = " + delay);
@@ -79,14 +66,21 @@ public class VNF {
         if (maxInstances < -1L) {
             throw new IllegalArgumentException("maxInstances = " + maxInstances);
         }
+        if (flowMigrationPenalty < 0.0) {
+            throw new IllegalArgumentException("flowMigrationPenalty = " + flowMigrationPenalty);
+        }
+        for (int i = 0; i < reqResources.length; i++) {
+            if (reqResources[i] < 0.0) {
+                throw new IllegalArgumentException("reqResources["+i+"] = " + reqResources[i]);
+            }
+        }
 
         this.name = name;
-        this.cpuRequired = cpuRequired;
-        this.ramRequired = ramRequired;
-        this.hddRequired = hddRequired;
+        this.reqResources = reqResources;
         this.delay = delay;
         this.processingCapacity = processingCapacity;
         this.maxInstances = maxInstances;
+        this.flowMigrationPenalty = flowMigrationPenalty;
     }
 
     /**
@@ -104,12 +98,11 @@ public class VNF {
     public String toString() {
         return "VNF{" +
                 "name=" + name +
-                ", cpuRequired=" + cpuRequired +
-                ", ramRequired=" + ramRequired +
-                ", hddRequired=" + hddRequired +
                 ", delay=" + delay +
                 ", processingCapacity=" + processingCapacity +
                 ", maxInstances=" + maxInstances +
+                ", flowMigrationPenalty=" + flowMigrationPenalty +
+                ", reqResources=" + Arrays.toString(reqResources) +
                 '}';
     }
 

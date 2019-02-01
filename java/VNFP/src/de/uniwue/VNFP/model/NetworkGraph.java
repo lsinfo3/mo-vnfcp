@@ -14,15 +14,106 @@ import java.util.stream.Collectors;
  * @author alex
  */
 public class NetworkGraph {
+    /**
+     * Indicates whether the edges in this graph are directed or bidirectional.
+     */
+    public final boolean directed;
+    /**
+     * Indicates whether the nodes were parsed with GeoCoordinates available for easier display.
+     */
+    public boolean hasGeoCoordinates;
+
     private HashMap<String, Node> nodes;
     private HashMap<Node, HashMap<Node, Node.Att>> backpointerDij;
     private HashMap<Node, HashMap<Node, Node.Att>> backpointerBfs;
 
     /**
      * Creates a new, empty graph.
+     *
+     * @param directed Indicates whether the edges in this graph are directed or bidirectional.
      */
-    public NetworkGraph() {
+    public NetworkGraph(boolean directed) {
+        this.directed = directed;
         nodes = new HashMap<>();
+    }
+
+    /**
+     * Creates a new node with the given resources and adds it to the graph
+     *
+     * @param name      Name / ID of the new node.
+     * @param resources Amount of available computational resources.
+     * @return Newly created Node object,
+     */
+    public Node addNode(String name, double[] resources) {
+        Node n = new Node(name, resources);
+
+        if (nodes.containsKey(name)) {
+            throw new IllegalArgumentException("node " + n.name + " added twice");
+        }
+
+        nodes.put(name, n);
+        backpointerDij = null;
+        backpointerBfs = null;
+        return n;
+    }
+
+    /**
+     * Creates a new {@link Link} between the given nodes, and adds it to n1's neighbor list (or to both, if undirected).
+     *
+     * @param n1        First node of the link.
+     * @param n2        Second node of the link.
+     * @param bandwidth Available bandwidth. (Mbps)
+     * @param delay     Latency of the link (μs).
+     * @return Newly created Link object.
+     */
+    public Link addLink(Node n1, Node n2, double bandwidth, double delay) {
+        backpointerDij = null;
+        backpointerBfs = null;
+        if (directed) return n1.addNeighbourDirected(n2, bandwidth, delay);
+        else return n1.addNeighbour(n2, bandwidth, delay);
+    }
+
+    /**
+     * Creates two new {@link Link}s between the given nodes, and adds them to each other's neighbor lists.
+     * Only works for directed graphs.
+     *
+     * @param n1        First node of the link.
+     * @param n2        Second node of the link.
+     * @param bandwidth Available bandwidth. (Mbps)
+     * @param delay     Latency of the link (μs).
+     * @return Both newly created Link objects.
+     */
+    public Link[] addBothDirectedLinks(Node n1, Node n2, double bandwidth, double delay) {
+        if (!directed) {
+            throw new IllegalStateException("Attempting to add directed links to an undirected graph");
+        }
+
+        backpointerDij = null;
+        backpointerBfs = null;
+        Link l1 = n1.addNeighbourDirected(n2, bandwidth, delay);
+        Link l2 = n2.addNeighbourDirected(n1, bandwidth, delay);
+        return new Link[]{l1, l2};
+    }
+
+    /**
+     * Returns the node map.
+     *
+     * @return A map with NodeName -> Node Object pointers.
+     */
+    public HashMap<String, Node> getNodes() {
+        return nodes;
+    }
+
+    /**
+     * Collects all links in the graph and returns the Collection.
+     *
+     * @return A HashSet containing all Links in the network.
+     */
+    public HashSet<Link> getLinks() {
+        return nodes.values().stream()
+                .map(Node::getNeighbors)
+                .flatMap(HashSet::stream)
+                .collect(Collectors.toCollection(HashSet::new));
     }
 
     /**
@@ -100,95 +191,25 @@ public class NetworkGraph {
         return middle;
     }
 
-    /**
-     * Creates a new node with the given resources and adds it to the graph
-     *
-     * @param name        Name / ID of the new node.
-     * @param cpuCapacity Available number of cores.
-     * @param ramCapacity Available amount of RAM (Mb).
-     * @param hddCapacity Available HDD resources (Gb).
-     * @return Newly created Node object,
-     */
-    public Node addNode(String name, double cpuCapacity, double ramCapacity, double hddCapacity) {
-        Node n = new Node(name, cpuCapacity, ramCapacity, hddCapacity);
-
-        if (nodes.containsKey(name)) {
-            throw new IllegalArgumentException("node " + n.name + " added twice");
-        }
-
-        nodes.put(name, n);
-        backpointerDij = null;
-        backpointerBfs = null;
-        return n;
-    }
-
-    /**
-     * Creates a new (undirected) {@link Link} between the given nodes and adds it to both nodes' neighbor lists.
-     *
-     * @param n1        First node of the link.
-     * @param n2        Second node of the link.
-     * @param bandwidth Available bandwidth. (Mbps)
-     * @param delay     Latency of the link (μs).
-     * @return Newly created Link object.
-     */
-    public Link addLink(Node n1, Node n2, double bandwidth, double delay) {
-        backpointerDij = null;
-        backpointerBfs = null;
-        return n1.addNeighbour(n2, bandwidth, delay);
-    }
-
-    /**
-     * Creates a new (directed) {@link Link} from n1 to n2 and adds it to n1's neighbor list.
-     *
-     * @param n1        First node of the link.
-     * @param n2        Second node of the link.
-     * @param bandwidth Available bandwidth. (Mbps)
-     * @param delay     Latency of the link (μs).
-     * @return Newly created Link object.
-     */
-    public Link addLinkDirected(Node n1, Node n2, double bandwidth, double delay) {
-        backpointerDij = null;
-        backpointerBfs = null;
-        return n1.addNeighbourDirected(n2, bandwidth, delay);
-    }
-
-    /**
-     * Returns the node map.
-     *
-     * @return A map with NodeName -> Node Object pointers.
-     */
-    public HashMap<String, Node> getNodes() {
-        return nodes;
-    }
-
-    /**
-     * Collects all links in the graph and returns the Collection.
-     *
-     * @return A HashSet containing all Links in the network.
-     */
-    public HashSet<Link> getLinks() {
-        return nodes.values().stream()
-                .map(Node::getNeighbours)
-                .flatMap(HashSet::stream)
-                .collect(Collectors.toCollection(HashSet::new));
-    }
-
     @Override
     public String toString() {
         HashSet<Link> links = getLinks();
         StringBuilder sb = new StringBuilder("# Number of nodes, Number of links");
-        sb.append("\n").append(nodes.size()).append(" ").append(links.size());
-        sb.append("\n\n# Node ID, Cores");
+        sb.append("\n").append(nodes.size()).append(",").append(links.size());
+        sb.append("\n\n# Node ID, Resources");
 
         for (Node n : nodes.values()) {
-            sb.append("\n").append(n.name).append(" ").append(n.cpuCapacity);
+            sb.append("\n").append(n.name);
+            for (double d : n.resources) {
+                sb.append(",").append(d);
+            }
         }
 
         sb.append("\n\n# Node ID, Node ID, Bandwidth, Delay");
 
         for (Link l : links) {
-            sb.append("\n").append(l.node1.name).append(" ").append(l.node2.name)
-                    .append(" ").append(l.bandwidth).append(" ").append(l.delay);
+            sb.append("\n").append(l.node1.name).append(",").append(l.node2.name)
+                    .append(",").append(l.bandwidth).append(",").append(l.delay);
         }
 
         return sb.toString();
@@ -221,8 +242,8 @@ public class NetworkGraph {
                 "    fontcolor = white\n" +
                 "  ];\n");
 
-        // Nodes with CPU resources:
-        nodes.values().stream().filter(n -> n.cpuCapacity > 0.0).forEach(n -> sb.append("  ").append(n.name).append(";\n"));
+        // Nodes with resources:
+        nodes.values().stream().filter(n -> n.resources[0] > 0.0).forEach(n -> sb.append("  ").append(n.name).append(";\n"));
 
         sb.append("\n" +
                 "  // nodes without CPU\n" +
@@ -233,7 +254,7 @@ public class NetworkGraph {
                 "  ];\n");
 
         // Nodes without CPU resources:
-        nodes.values().stream().filter(n -> n.cpuCapacity == 0.0).forEach(n -> sb.append("  ").append(n.name).append(";\n"));
+        nodes.values().stream().filter(n -> n.resources[0] == 0.0).forEach(n -> sb.append("  ").append(n.name).append(";\n"));
 
         sb.append("\n" +
                 "  // edges\n");

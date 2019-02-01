@@ -15,50 +15,66 @@ import java.util.regex.Pattern;
 /**
  * This class reads a VNF specification file.
  * File format:
- * <p>
  * <pre>
- *     [VNF Name], [Cores], [RAM (MB)], [HDD (GB)], [Delay (μs)], [Capacity (kb/s)], [Max Instances]
- *     [VNF Name], [Cores], [RAM (MB)], [HDD (GB)], [Delay (μs)], [Capacity (kb/s)], [Max Instances]
- *     [VNF Name], [Cores], [RAM (MB)], [HDD (GB)], [Delay (μs)], [Capacity (kb/s)], [Max Instances]
+ *     [resources]
+ *     Resource-Name-1
+ *     Resource-Name-2
+ *     ...
+ *
+ *     [vnfs]
+ *     Vnf-Name-1, Delay-1, Capacity-1, Max-Instances-1, Flow-Migration-Penalty-1, Resource-1.1, Resource-1.2, ...
+ *     Vnf-Name-2, Delay-2, Capacity-2, Max-Instances-2, Flow-Migration-Penalty-2, Resource-2.1, Resource-2.2, ...
+ *     ...
+ *
+ *     [abbrev]
+ *     Vnf-Alias-1, Vnf-Replacement-1.1, Vnf-Replacement-1.2, ...
+ *     Vnf-Alias-2, Vnf-Replacement-2.1, Vnf-Replacement-2.2, ...
+ *     ...
+ *
+ *     [pairs]
+ *     Vnf-1.1, Vnf-1.2, Max-Latency-1
+ *     Vnf-2.1, Vnf-2.2, Max-Latency-2
  *     ...
  * </pre>
  * <p>
  * Example:
  * <pre>
- *     # VNF Name, Cores, RAM,   HDD, Delay, Capacity, Max Instances
- *     Firewall,   4,     4000,  1,   45,    900000,   15
- *     Proxy,      4,     4000,  1,   40,    900000,   7
- *     IDS,        8,     8000,  1,   1,     600000,   15
- *     NAT,        2,     2000,  1,   10,    900000,   -1
+ *     [resources]
+ *     CPU_Cores
+ *     RAM
+ *     HDD_Size
+ *
+ *     [vnfs]
+ *     # VNF Name,   Delay, Capacity, Max Instances, Flow Migration Penalty, Cores, RAM,   HDD
+ *     Firewall,     45,    900000,   -1,            10,                     4,     4000,  1
+ *     Proxy,        40,    900000,   -1,            0,                      4,     4000,  1
+ *     IDS,          1,     600000,   -1,            0,                      8,     8000,  1
+ *     NAT,          10,    900000,   -1,            2,                      2,     2000,  1
+ *
+ *     [abbrev]
+ *     # Define abbreviations: use predefined sub-chains in requests
+ *     # VNF-Alias, VNF1, VNF2, VNF3, ...
+ *     # --empty
+ *
+ *     [pairs]
+ *     # Define VNF pairs that should be closely connected:
+ *     # VNF1, VNF2, Max Latency between them (μs)
+ *     # --empty
  * </pre>
  *
  * @author alex
  */
 public class VnfLibReader {
     // Patterns for the lines:
-    private static Pattern vnfPattern = Pattern.compile("([^;,]+),\\s*(\\d+(?:\\.\\d+)?)\\s*,\\s*(\\d+(?:\\.\\d+)?)\\s*,\\s*(\\d+(?:\\.\\d+)?)\\s*,\\s*(\\d+(?:\\.\\d+)?)\\s*,\\s*((?:-1)|(?:\\d+(?:\\.\\d+)?))\\s*,\\s*((?:-1)|(?:\\d+))\\s*");
+    private static Pattern resourcePattern = Pattern.compile("([^;,]+)");
+    private static String vnfPatternS = "([^;,]+),\\s*(\\d+(?:\\.\\d+)?)\\s*,\\s*((?:-1)|(?:\\d+(?:\\.\\d+)?))\\s*,\\s*((?:-1)|(?:\\d+))\\s*,\\s*(\\d+(?:\\.\\d+)?)\\s*";
+    private static String vnfPatternResourceSuffixS = ",\\s*(\\d+(?:\\.\\d+)?)\\s*";
     private static Pattern abbrevPattern = Pattern.compile("([^;,]+),([^;,]+(?:,[^;,]+)*)");
     private static Pattern pairsPattern = Pattern.compile("([^;,]+),([^;,]+),\\s*(\\d+(?:\\.\\d+)?)\\s*");
 
     /**
      * This method reads a VNF specification file.
-     * File format:
-     * <p>
-     * <pre>
-     *     [VNF Name], [Cores], [RAM (MB)], [HDD (GB)], [Delay (μs)], [Capacity (kb/s)], [Max Instances]
-     *     [VNF Name], [Cores], [RAM (MB)], [HDD (GB)], [Delay (μs)], [Capacity (kb/s)], [Max Instances]
-     *     [VNF Name], [Cores], [RAM (MB)], [HDD (GB)], [Delay (μs)], [Capacity (kb/s)], [Max Instances]
-     *     ...
-     * </pre>
-     * <p>
-     * Example:
-     * <pre>
-     *     # VNF Name, Cores, RAM,   HDD, Delay, Capacity, Max Instances
-     *     Firewall,   4,     4000,  1,   45,    900000,   15
-     *     Proxy,      4,     4000,  1,   40,    900000,   7
-     *     IDS,        8,     8000,  1,   1,     600000,   15
-     *     NAT,        2,     2000,  1,   10,    900000,   -1
-     * </pre>
+     * For the file format, cf. the main class documentation {@link VnfLibReader}.
      *
      * @param path Path towards the VNF specification file.
      * @return {@link VnfLib} object with all read content..
@@ -70,23 +86,7 @@ public class VnfLibReader {
 
     /**
      * This method reads a VNF specification file.
-     * File format:
-     * <p>
-     * <pre>
-     *     [VNF Name], [Cores], [RAM (MB)], [HDD (GB)], [Delay (μs)], [Capacity (kb/s)], [Max Instances]
-     *     [VNF Name], [Cores], [RAM (MB)], [HDD (GB)], [Delay (μs)], [Capacity (kb/s)], [Max Instances]
-     *     [VNF Name], [Cores], [RAM (MB)], [HDD (GB)], [Delay (μs)], [Capacity (kb/s)], [Max Instances]
-     *     ...
-     * </pre>
-     * <p>
-     * Example:
-     * <pre>
-     *     # VNF Name, Cores, RAM,   HDD, Delay, Capacity, Max Instances
-     *     Firewall,   4,     4000,  1,   45,    900000,   15
-     *     Proxy,      4,     4000,  1,   40,    900000,   7
-     *     IDS,        8,     8000,  1,   1,     600000,   15
-     *     NAT,        2,     2000,  1,   10,    900000,   -1
-     * </pre>
+     * For the file format, cf. the main class documentation {@link VnfLibReader}.
      *
      * @param path Path towards the VNF specification file.
      * @return {@link VnfLib} object with all read content..
@@ -95,7 +95,8 @@ public class VnfLibReader {
     public static VnfLib readFromFile(String path) throws IOException {
         LineNumberReader lnr = new LineNumberReader(new FileReader(path));
         VnfLib lib = new VnfLib();
-        int mode = 1;
+        int mode = 0; // 0=resources, 1=vnfs, 2=abbrev, 3=pairs
+        Pattern vnfPattern = null;
         String line;
 
         while ((line = lnr.readLine()) != null) {
@@ -105,8 +106,27 @@ public class VnfLibReader {
             }
 
             // Mode:
+            if (line.trim().toLowerCase().equals("[resources]")) {
+                if (lib.res.length != 0) {
+                    lnr.close();
+                    throw new IOException("Only one resource declaration in VnfLib possible (line '" + line + "')");
+                }
+
+                mode = 0;
+                continue;
+            }
             if (line.trim().toLowerCase().equals("[vnfs]")) {
+                if (lib.res.length == 0) {
+                    lnr.close();
+                    throw new IOException("Resources must be declared before VNFs in VnfLib (line '" + line + "')");
+                }
+
                 mode = 1;
+                StringBuilder pattern = new StringBuilder(vnfPatternS);
+                for (int i = 0; i < lib.res.length; i++) {
+                    pattern.append(vnfPatternResourceSuffixS);
+                }
+                vnfPattern = Pattern.compile(pattern.toString());
                 continue;
             }
             if (line.trim().toLowerCase().equals("[abbrev]")) {
@@ -116,6 +136,16 @@ public class VnfLibReader {
             if (line.trim().toLowerCase().equals("[pairs]")) {
                 mode = 3;
                 continue;
+            }
+
+            // New resources:
+            if (mode == 0) {
+                Matcher m = resourcePattern.matcher(line);
+                if (!m.matches()) {
+                    lnr.close();
+                    throw new IOException("line '" + line + "' does not match pattern '" + resourcePattern.pattern() + "'");
+                }
+                lib.addResource(m.group(1));
             }
 
             // New VNFs:
@@ -128,15 +158,18 @@ public class VnfLibReader {
 
                 // Turn String groups into objects:
                 String vnfName = m.group(1).trim();
-                double cores = Double.parseDouble(m.group(2).trim());
-                double ram = Double.parseDouble(m.group(3).trim());
-                double hdd = Double.parseDouble(m.group(4).trim());
-                double delay = Double.parseDouble(m.group(5).trim());
-                double capacity = parseOrInfty(m.group(6).trim()) / 1000.0;
-                long maxInstances = Long.parseLong(m.group(7).trim());
+                double delay = Double.parseDouble(m.group(2).trim());
+                double capacity = parseOrInfty(m.group(3).trim()) / 1000.0;
+                long maxInstances = Long.parseLong(m.group(4).trim());
+                double flowMigrationPenalty = Double.parseDouble(m.group(5).trim());
+
+                double[] res = new double[lib.res.length];
+                for (int i = 0; i < res.length; i++) {
+                    res[i] = Double.parseDouble(m.group(6 + i).trim());
+                }
 
                 // Create object and save it:
-                VNF vnf = new VNF(vnfName, cores, ram, hdd, delay, capacity, maxInstances);
+                VNF vnf = new VNF(vnfName, delay, capacity, maxInstances, flowMigrationPenalty, res);
                 lib.addVnf(vnfName, new VNF[]{vnf});
             }
 
@@ -163,7 +196,7 @@ public class VnfLibReader {
                 lib.addVnf(stringAbbrev, vnfChain.toArray(new VNF[vnfChain.size()]));
             }
 
-            // Neue pair:
+            // New pair:
             else if (mode == 3) {
                 Matcher m = pairsPattern.matcher(line);
                 if (!m.matches()) {

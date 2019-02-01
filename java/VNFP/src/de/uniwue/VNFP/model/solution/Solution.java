@@ -5,6 +5,7 @@ import de.uniwue.VNFP.model.solution.overview.LinkOverview;
 import de.uniwue.VNFP.model.solution.overview.NodeOverview;
 import de.uniwue.VNFP.model.solution.overview.VnfTypeOverview;
 import de.uniwue.VNFP.util.Config;
+import de.uniwue.VNFP.util.HashWrapper;
 import de.uniwue.VNFP.util.Median;
 
 import java.io.IOException;
@@ -14,8 +15,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static de.uniwue.VNFP.model.solution.Solution.Vals.*;
-
 /**
  * Objects of this class represent a placement that consists of {@link TrafficAssignment}s.
  *
@@ -23,13 +22,25 @@ import static de.uniwue.VNFP.model.solution.Solution.Vals.*;
  */
 public class Solution implements Comparable<Solution> {
     /**
+     * The ProblemInstance for this Solution (including Network, VnfLib, Requests and possible Objectives)
+     */
+    public final ProblemInstance pi;
+    /**
      * The network graph with available resources.
      */
     public final NetworkGraph graph;
     /**
+     * The VNF type library for this problem.
+     */
+    public final VnfLib lib;
+    /**
      * All network demands. The order of requests and assignments must match.
      */
     public final TrafficRequest[] requests;
+    /**
+     * The possible objectives library for this problem.
+     */
+    public final Objs obj;
     /**
      * Contains one TrafficAssignment for each TrafficRequest. The order of requests and assignments must match.
      */
@@ -52,58 +63,10 @@ public class Solution implements Comparable<Solution> {
     private int changed;
 
     /**
-     * This Enum lists all possible objective functions for the objective vectors.
-     * All values are to be minimized.
-     *
-     * Prefix TOTAL indicates a sum of all respective values.
-     * Prefix MEAN indicates the average of all respective values.
-     * Suffix INDEX indicates the ratio (value) / (minimum possible value).
-     * Infix ROOTED indicates that, before summing up the values, their square root has been taken.
-     */
-    public enum Vals {
-        UNFEASIBLE,
-
-        // Link resources:
-        MEAN_DELAY_INDEX,
-        MEDIAN_DELAY_INDEX,
-        TOTAL_DELAY,
-        MAX_DELAY_INDEX,
-        MEAN_HOPS_INDEX,
-        MEDIAN_HOPS_INDEX,
-        TOTAL_NUMBER_OF_HOPS,
-        MAX_HOPS_INDEX,
-
-        // Node resources:
-        TOTAL_USED_CPU,
-        TOTAL_USED_RAM,
-        TOTAL_USED_HDD,
-
-        // VNF instance resources:
-        MEAN_INVERSE_LOAD_INDEX,
-        MEDIAN_INVERSE_LOAD_INDEX,
-        NUMBER_OF_VNF_INSTANCES,
-        TOTAL_ROOTED_VNF_LOADS,
-
-        // Indicators of unfeasibility:
-        // OVERLOADED refers to VNF instances on nodes with exhausted resources.
-        // EXCESSIVE refers to VNF types with more instances than permitted.
-        NUMBER_OF_DELAY_VIOLATIONS,
-        NUMBER_OF_CPU_VIOLATIONS,
-        NUMBER_OF_RAM_VIOLATIONS,
-        NUMBER_OF_HDD_VIOLATIONS,
-        NUMBER_OF_EXCESSIVE_VNFS,
-        NUMBER_OF_CONGESTED_LINKS,
-        TOTAL_OVERLOADED_VNF_CAPACITY,
-        TOTAL_ROOTED_EXCESSIVE_VNF_CAPACITY;
-
-        public final int i = ordinal();
-    }
-
-    /**
      * This Array contains values for every possible objective function
-     * defined by the <tt>Vals</tt> Enum.
+     * defined by {@link Objs}.
      */
-    public final double[] vals;
+    public double[] vals;
 
     private double[] objectiveVector;
     private double[] unfeasibleVector;
@@ -111,17 +74,20 @@ public class Solution implements Comparable<Solution> {
     /**
      * Creates a new Solution instance with the given content and calculates objective values for it.
      *
-     * @param graph       The network graph with available resources.
-     * @param requests    All network demands. The order of requests and assignments must match.
+     * @param pi          The solved problem instance (network, vnf lib, requests)
      * @param assignments Contains one TrafficAssignment for each TrafficRequest. The order of requests and assignments must match.
      * @param calcStats   True indicates that the objective vector should be calculated right away.
      */
-    private Solution(NetworkGraph graph, TrafficRequest[] requests, TrafficAssignment[] assignments, boolean calcStats) {
-        this.graph = Objects.requireNonNull(graph);
-        this.requests = Objects.requireNonNull(requests);
+    private Solution(ProblemInstance pi, TrafficAssignment[] assignments, boolean calcStats) {
+        this.pi = Objects.requireNonNull(pi);
+        this.graph = pi.ng;
+        this.requests = pi.reqs;
+        this.lib = pi.vnfLib;
+        this.obj = pi.objectives;
+
         this.assignments = Objects.requireNonNull(assignments);
 
-        vals = new double[Vals.values().length];
+        vals = new double[obj.values().length];
 
         // Sanity-Check:
         for (TrafficRequest req : requests) {
@@ -156,50 +122,50 @@ public class Solution implements Comparable<Solution> {
     /**
      * Creates a new Solution instance with the given content and calculates objective values for it.
      *
-     * @param graph       The network graph with available resources.
-     * @param requests    All network demands. The order of requests and assignments must match.
+     * @param pi          The solved problem instance (network, vnf lib, requests)
      * @param assignments Contains one TrafficAssignment for each TrafficRequest. The order of requests and assignments must match.
      * @return A Solution object with the given content.
      */
-    public static Solution getInstance(NetworkGraph graph, TrafficRequest[] requests, TrafficAssignment[] assignments) {
-        return new Solution(graph, requests, assignments, true);
+    public static Solution getInstance(ProblemInstance pi, TrafficAssignment[] assignments) {
+        return new Solution(pi, assignments, true);
     }
 
     /**
      * Creates a new Solution instance with the given content and makes it unfeasible.
      *
-     * @param graph       The network graph with available resources.
-     * @param requests    All network demands. The order of requests and assignments must match.
+     * @param pi The solved problem instance (network, vnf lib, requests)
      */
-    private Solution(NetworkGraph graph, TrafficRequest[] requests) {
-        this.graph = Objects.requireNonNull(graph);
-        this.requests = Objects.requireNonNull(requests);
+    private Solution(ProblemInstance pi) {
+        this.pi = Objects.requireNonNull(pi);
+        this.graph = pi.ng;
+        this.requests = pi.reqs;
         this.assignments = null;
+        this.lib = pi.vnfLib;
+        this.obj = pi.objectives;
 
-        vals = new double[Vals.values().length];
-        vals[Vals.UNFEASIBLE.i] = 1;
+        vals = new double[obj.values().length];
+        vals[obj.UNFEASIBLE.i] = 1;
     }
 
     /**
      * Creates a new unfeasible dummy Solution with invalid objective values.
      *
-     * @param graph    The network graph with available resources.
-     * @param requests All network demands.
+     * @param pi The solved problem instance (network, vnf lib, requests)
      * @return An empty, unfeasible Solution object.
      */
-    public static Solution getUnfeasibleInstance(NetworkGraph graph, TrafficRequest[] requests) {
-        return new Solution(graph, requests);
+    public static Solution getUnfeasibleInstance(ProblemInstance pi) {
+        return new Solution(pi);
     }
 
     /**
-     * Creates a new Solution-instance without requests or assignments.
+     * Creates a new Solution-instance with the same network, but without requests or assignments.
      * May be used for neighbour selection algorithms in order to create entirely new solutions.
      *
-     * @param graph The corresponding network, with all its nodes and links.
+     * @param pi The solved problem instance (network, vnf lib, requests)
      * @return A new solution without flows.
      */
-    public static Solution createEmptyInstance(NetworkGraph graph) {
-        return new Solution(graph, new TrafficRequest[0], new TrafficAssignment[0], true);
+    public static Solution createEmptyInstance(ProblemInstance pi) {
+        return new Solution(pi.copyWith(new TrafficRequest[0]), new TrafficAssignment[0], true);
     }
 
     /**
@@ -220,7 +186,7 @@ public class Solution implements Comparable<Solution> {
         System.arraycopy(requests, 0, reqs, 0, lastValidIndex+1);
         System.arraycopy(assignments, 0, assigs, 0, lastValidIndex+1);
 
-        Solution s2 = new Solution(old.graph, reqs, assigs, false);
+        Solution s2 = new Solution(old.pi.copyWith(reqs), assigs, false);
 
         // Calc the stats based on the original solution
         s2.nodeMap = new HashMap<>(old.nodeMap);
@@ -292,7 +258,7 @@ public class Solution implements Comparable<Solution> {
         //    return new Solution(old.graph, reqs, assigs, true);
         //}
 
-        Solution s2 = new Solution(old.graph, reqs, assigs, false);
+        Solution s2 = new Solution(old.pi.copyWith(reqs), assigs, false);
 
         // Calc the stats based on the original solution
         s2.nodeMap = new HashMap<>(old.nodeMap);
@@ -376,7 +342,7 @@ public class Solution implements Comparable<Solution> {
     public void printDebugOutput(Writer w) throws IOException {
         // Nodes:
         for (NodeOverview nodeOv : nodeMap.values()) {
-            if (nodeOv.remainingCpu() < 0.0 || nodeOv.remainingRam() < 0.0 || nodeOv.remainingHdd() < 0.0) {
+            if (Arrays.stream(nodeOv.remainingResources()).anyMatch(d -> d < 0.0)) {
                 w.write("* ");
             }
             else {
@@ -384,9 +350,7 @@ public class Solution implements Comparable<Solution> {
             }
 
             w.write("Node " + nodeOv.node.name +
-                    " | CPU left: " + nodeOv.remainingCpu() +
-                    " | RAM left: " + nodeOv.remainingRam() +
-                    " | HDD left: " + nodeOv.remainingHdd() +
+                    " | Resources left: " + Arrays.toString(nodeOv.remainingResources()) +
                     " | VNFS:");
             w.write(nodeOv.getVnfInstances().values().stream()
                     .map(v -> " " + v.type.name + "=" + v.loads.length)
@@ -450,7 +414,7 @@ public class Solution implements Comparable<Solution> {
             vnfMap = new HashMap<>();
             for (Node n : graph.getNodes().values()) {
                 nodeMap.put(n, new NodeOverview(n));
-                n.getNeighbours().forEach(l -> {
+                n.getNeighbors().forEach(l -> {
                     if (!linkMap.containsKey(l)) linkMap.put(l, new LinkOverview(l));
                 });
             }
@@ -490,30 +454,22 @@ public class Solution implements Comparable<Solution> {
         ArrayList<Double> loads = new ArrayList<>();
 
         for (NodeOverview nodeOv : nodeMap.values()) {
-            vals[TOTAL_USED_CPU.i] += nodeOv.node.cpuCapacity - nodeOv.remainingCpu();
-            vals[TOTAL_USED_RAM.i] += nodeOv.node.ramCapacity - nodeOv.remainingRam();
-            vals[TOTAL_USED_HDD.i] += nodeOv.node.hddCapacity - nodeOv.remainingHdd();
+            for (int i = 0; i < nodeOv.node.resources.length; i++) {
+                vals[obj.TOTAL_USED_RESOURCES[i].i] += nodeOv.node.resources[i] - nodeOv.remainingResources()[i];
+            }
 
             // Check node resources
-            if (nodeOv.remainingCpu() < 0.0) {
-                vals[UNFEASIBLE.i] = 1.0;
-                vals[NUMBER_OF_CPU_VIOLATIONS.i]++;
-            }
-            if (nodeOv.remainingRam() < 0.0) {
-                vals[UNFEASIBLE.i] = 1.0;
-                vals[NUMBER_OF_RAM_VIOLATIONS.i]++;
-            }
-            if (nodeOv.remainingHdd() < 0.0) {
-                vals[UNFEASIBLE.i] = 1.0;
-                vals[NUMBER_OF_HDD_VIOLATIONS.i]++;
+            if (Arrays.stream(nodeOv.remainingResources()).anyMatch(d -> d < 0.0)) {
+                vals[obj.UNFEASIBLE.i] = 1.0;
+                vals[obj.NUMBER_OF_RESOURCE_VIOLATIONS.i]++;
             }
 
             for (VnfInstances inst : nodeOv.getVnfInstances().values()) {
                 // Check capacities
                 for (double d : inst.loads) {
-                    vals[TOTAL_ROOTED_VNF_LOADS.i] += Math.sqrt(d);
-                    if (nodeOv.remainingCpu() < 0.0 || nodeOv.remainingRam() < 0.0 || nodeOv.remainingHdd() < 0.0) {
-                        vals[TOTAL_OVERLOADED_VNF_CAPACITY.i] += d;
+                    vals[obj.TOTAL_ROOTED_VNF_LOADS.i] += Math.sqrt(d);
+                    if (Arrays.stream(nodeOv.remainingResources()).anyMatch(v -> v < 0.0)) {
+                        vals[obj.TOTAL_OVERLOADED_VNF_CAPACITY.i] += d;
                     }
 
                     loads.add(inst.type.processingCapacity / d);
@@ -527,24 +483,24 @@ public class Solution implements Comparable<Solution> {
                 numberOfVnfsPerType.put(inst.type, current);
             }
         }
-        vals[MEAN_INVERSE_LOAD_INDEX.i] = loads.stream().mapToDouble(Double::doubleValue).sum() / loads.size();
-        vals[MEDIAN_INVERSE_LOAD_INDEX.i] = Median.median(loads.stream().mapToDouble(Double::doubleValue).toArray());
+        vals[obj.MEAN_INVERSE_LOAD_INDEX.i] = loads.stream().mapToDouble(Double::doubleValue).sum() / loads.size();
+        vals[obj.MEDIAN_INVERSE_LOAD_INDEX.i] = Median.median(loads.stream().mapToDouble(Double::doubleValue).toArray());
 
         // Check number of instances
         for (Map.Entry<VNF, Double[]> e : numberOfVnfsPerType.entrySet()) {
             if (e.getKey().maxInstances > -1L && Math.round(e.getValue()[0]) > e.getKey().maxInstances) {
-                vals[NUMBER_OF_EXCESSIVE_VNFS.i] += (e.getValue()[0] - e.getKey().maxInstances);
-                vals[TOTAL_ROOTED_EXCESSIVE_VNF_CAPACITY.i] += e.getValue()[1];
-                vals[UNFEASIBLE.i] = 1.0;
+                vals[obj.NUMBER_OF_EXCESSIVE_VNFS.i] += (e.getValue()[0] - e.getKey().maxInstances);
+                vals[obj.TOTAL_ROOTED_EXCESSIVE_VNF_CAPACITY.i] += e.getValue()[1];
+                vals[obj.UNFEASIBLE.i] = 1.0;
             }
-            vals[NUMBER_OF_VNF_INSTANCES.i] += e.getValue()[0];
+            vals[obj.NUMBER_OF_VNF_INSTANCES.i] += e.getValue()[0];
         }
 
         // Check link bandwidth
         for (LinkOverview linkOv : linkMap.values()) {
             if (linkOv.remainingBandwidth() < 0.0) {
-                vals[UNFEASIBLE.i] = 1.0;
-                vals[NUMBER_OF_CONGESTED_LINKS.i]++;
+                vals[obj.UNFEASIBLE.i] = 1.0;
+                vals[obj.NUMBER_OF_CONGESTED_LINKS.i]++;
             }
         }
 
@@ -552,23 +508,69 @@ public class Solution implements Comparable<Solution> {
         double delayIndex = 0.0;
         double hopsIndex = 0.0;
         for (TrafficAssignment assig : assignments) {
-            vals[TOTAL_DELAY.i] += assig.delay;
-            vals[TOTAL_NUMBER_OF_HOPS.i] += assig.numberOfHops;
+            vals[obj.TOTAL_DELAY.i] += assig.delay;
+            vals[obj.NUMBER_OF_HOPS.i] += assig.numberOfHops;
             delayIndex += assig.delayIndex;
             hopsIndex += assig.hopsIndex;
-            if (assig.delayIndex > vals[MAX_DELAY_INDEX.i]) vals[MAX_DELAY_INDEX.i] = assig.delayIndex;
-            if (assig.hopsIndex > vals[MAX_HOPS_INDEX.i]) vals[MAX_HOPS_INDEX.i] = assig.hopsIndex;
+            if (assig.delayIndex > vals[obj.MAX_DELAY_INDEX.i]) vals[obj.MAX_DELAY_INDEX.i] = assig.delayIndex;
+            if (assig.hopsIndex > vals[obj.MAX_HOPS_INDEX.i]) vals[obj.MAX_HOPS_INDEX.i] = assig.hopsIndex;
 
             if (assig.delay > assig.request.expectedDelay) {
-                vals[UNFEASIBLE.i] = 1.0;
-                vals[NUMBER_OF_DELAY_VIOLATIONS.i]++;
+                vals[obj.UNFEASIBLE.i] = 1.0;
+                vals[obj.NUMBER_OF_DELAY_VIOLATIONS.i]++;
             }
         }
-        vals[MEAN_DELAY_INDEX.i] = delayIndex / (double) assignments.length;
-        vals[MEAN_HOPS_INDEX.i] = hopsIndex / (double) assignments.length;
+        vals[obj.MEAN_DELAY_INDEX.i] = delayIndex / (double) assignments.length;
+        vals[obj.MEAN_HOPS_INDEX.i] = hopsIndex / (double) assignments.length;
 
-        vals[MEDIAN_DELAY_INDEX.i] = Median.median(Arrays.stream(assignments).mapToDouble(a -> a.delayIndex).toArray());
-        vals[MEDIAN_HOPS_INDEX.i] = Median.median(Arrays.stream(assignments).mapToDouble(a -> a.hopsIndex).toArray());
+        vals[obj.MEDIAN_DELAY_INDEX.i] = Median.median(Arrays.stream(assignments).mapToDouble(a -> a.delayIndex).toArray());
+        vals[obj.MEDIAN_HOPS_INDEX.i] = Median.median(Arrays.stream(assignments).mapToDouble(a -> a.hopsIndex).toArray());
+
+		if (pi.initialSolutions != null) {
+			// Number of VNF Replacements
+			vals[obj.NUMBER_OF_VNF_REPLACEMENTS.i] = -1;
+			for (Solution s : pi.initialSolutions) {
+				double replacements = 0;
+				for (Node n : nodeMap.keySet()) {
+					for (VNF v : vnfMap.keySet()) {
+						VnfInstances inst1 = nodeMap.get(n).getVnfCapacities(v);
+						VnfInstances inst2 = s.nodeMap.get(n).getVnfCapacities(v);
+
+						replacements += Math.abs(inst1.loads.length - inst2.loads.length);
+					}
+				}
+				if (vals[obj.NUMBER_OF_VNF_REPLACEMENTS.i] == -1 || vals[obj.NUMBER_OF_VNF_REPLACEMENTS.i] > replacements) {
+					vals[obj.NUMBER_OF_VNF_REPLACEMENTS.i] = replacements;
+				}
+			}
+
+			// Prepare assignments map
+			HashMap<HashWrapper, TrafficAssignment> assigMap = new HashMap<>();
+			for (TrafficAssignment assig : assignments) {
+				assigMap.put(new HashWrapper(assig.request), assig);
+			}
+
+			// Flow Migration Penalty
+			vals[obj.TOTAL_FLOW_MIGRATION_PENALTY.i] = -1;
+			for (Solution s : pi.initialSolutions) {
+				double penalty = 0;
+				for (TrafficAssignment assig : s.assignments) {
+					TrafficAssignment assig2 = assigMap.get(new HashWrapper(assig.request));
+					if (assig2 != null) {
+						Node[] assigPath = Arrays.stream(assig.path).filter(n -> n.vnf != null).map(n -> n.node).toArray(Node[]::new);
+						Node[] assig2Path = Arrays.stream(assig2.path).filter(n -> n.vnf != null).map(n -> n.node).toArray(Node[]::new);
+						for (int i = 0; i < assigPath.length; i++) {
+							if (!assigPath[i].equals(assig2Path[i])) {
+								penalty += assig.request.vnfSequence[i].flowMigrationPenalty;
+							}
+						}
+					}
+				}
+				if (vals[obj.TOTAL_FLOW_MIGRATION_PENALTY.i] == -1 || vals[obj.TOTAL_FLOW_MIGRATION_PENALTY.i] > penalty) {
+					vals[obj.TOTAL_FLOW_MIGRATION_PENALTY.i] = penalty;
+				}
+			}
+		}
     }
 
     /**
@@ -578,7 +580,7 @@ public class Solution implements Comparable<Solution> {
      */
     public double[] getObjectiveVector() {
         if (objectiveVector == null) {
-            objectiveVector = Config.getInstance().objectiveVector(vals);
+            objectiveVector = Config.getInstance().objectiveVector(this);
         }
         return objectiveVector;
     }
@@ -601,13 +603,13 @@ public class Solution implements Comparable<Solution> {
      * @return true, if this Solution is feasible; otherwise: false.
      */
     public boolean isFeasible() {
-        return vals[UNFEASIBLE.i] == 0.0;
+        return vals[obj.UNFEASIBLE.i] == 0.0;
     }
 
     @Override
     public String toString() {
-        return "Solution{" + Arrays.stream(Vals.values())
-                .map(v -> v.name() + "=" + formatDouble(vals[v.i]))
+        return "Solution{" + Arrays.stream(obj.values())
+                .map(v -> v.toString().replace(" ", "_") + "=" + formatDouble(vals[v.i]))
                 .collect(Collectors.joining(", ")) + "}";
     }
 
@@ -633,9 +635,9 @@ public class Solution implements Comparable<Solution> {
      * @return A semicolon-separated value-list with header.
      */
     public String[] toStringCsv() {
-        String header = Arrays.stream(Vals.values()).map(Enum::name).collect(Collectors.joining(";"))
+        String header = Arrays.stream(obj.values()).map(o -> o.toString().replace(" ", "_")).collect(Collectors.joining(";"))
                 + ";" + IntStream.range(0, getObjectiveVector().length).mapToObj(i -> "obj"+i).collect(Collectors.joining(";"));
-        String values = Arrays.stream(Vals.values()).map(v -> String.valueOf(vals[v.i])).collect(Collectors.joining(";"))
+        String values = Arrays.stream(obj.values()).map(v -> String.valueOf(vals[v.i])).collect(Collectors.joining(";"))
                 + ";" + Arrays.stream(getObjectiveVector()).mapToObj(String::valueOf).collect(Collectors.joining(";"));
         return new String[]{header, values};
     }

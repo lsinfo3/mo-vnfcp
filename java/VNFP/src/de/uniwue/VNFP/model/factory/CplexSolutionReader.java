@@ -1,9 +1,6 @@
 package de.uniwue.VNFP.model.factory;
 
-import de.uniwue.VNFP.model.Link;
-import de.uniwue.VNFP.model.NetworkGraph;
-import de.uniwue.VNFP.model.Node;
-import de.uniwue.VNFP.model.TrafficRequest;
+import de.uniwue.VNFP.model.*;
 import de.uniwue.VNFP.model.solution.NodeAssignment;
 import de.uniwue.VNFP.model.solution.Solution;
 import de.uniwue.VNFP.model.solution.TrafficAssignment;
@@ -28,29 +25,30 @@ public class CplexSolutionReader {
      * Reads the paths and VNF sequences from the CPLEX solution.
      * <b>The order of the TrafficRequest array must match the order of both CPLEX log files!</b>
      *
-     * @param ng                 Network topology graph.
-     * @param reqs               The traffic demands. <b>The order must match the order of both CPLEX log files!</b>
+     * @param pi                 The ProblemInstance that was solved. <b>The order of requests must match the order of both CPLEX log files!</b>
      * @param cplexPathsFile     Path towards "log.cplex.paths".
      * @param cplexSequencesFile Path towards "log.cplex.sequences".
      * @return A Solution object for the given placement.
      * @throws IOException If any errors during file reads occur.
      */
-    public static Solution readFromCsv(NetworkGraph ng, TrafficRequest[] reqs, Path cplexPathsFile, Path cplexSequencesFile) throws IOException {
-        return readFromCsv(ng, reqs, cplexPathsFile.toAbsolutePath().toString(), cplexSequencesFile.toAbsolutePath().toString());
+    public static Solution readFromCsv(ProblemInstance pi, Path cplexPathsFile, Path cplexSequencesFile) throws IOException {
+        return readFromCsv(pi, cplexPathsFile.toAbsolutePath().toString(), cplexSequencesFile.toAbsolutePath().toString());
     }
 
     /**
      * Reads the paths and VNF sequences from the CPLEX solution.
      * <b>The order of the TrafficRequest array must match the order of both CPLEX log files!</b>
      *
-     * @param ng                 Network topology graph.
-     * @param reqs               The traffic demands. <b>The order must match the order of both CPLEX log files!</b>
+     * @param pi                 The ProblemInstance that was solved. <b>The order of requests must match the order of both CPLEX log files!</b>
      * @param cplexPathsFile     Path towards "log.cplex.paths".
      * @param cplexSequencesFile Path towards "log.cplex.sequences".
      * @return A Solution object for the given placement.
      * @throws IOException If any errors during file reads occur.
      */
-    public static Solution readFromCsv(NetworkGraph ng, TrafficRequest[] reqs, String cplexPathsFile, String cplexSequencesFile) throws IOException {
+    public static Solution readFromCsv(ProblemInstance pi, String cplexPathsFile, String cplexSequencesFile) throws IOException {
+        NetworkGraph ng = pi.ng;
+        TrafficRequest[] reqs = pi.reqs;
+
         LineNumberReader paths = new LineNumberReader(new FileReader(cplexPathsFile));
         LineNumberReader seqs = new LineNumberReader(new FileReader(cplexSequencesFile));
         int nr = -1;
@@ -125,7 +123,7 @@ public class CplexSolutionReader {
                 Link link = null;
                 if (iPath != 0) {
                     int _iPath = iPath;
-                    link = ng.getNodes().get(sPath[iPath]).getNeighbours().stream()
+                    link = ng.getNodes().get(sPath[iPath]).getNeighbors().stream()
                             .filter(l -> l.getOther(nPath[_iPath]).equals(nPath[_iPath-1]))
                             .findFirst().get();
                 }
@@ -150,6 +148,6 @@ public class CplexSolutionReader {
         paths.close();
         seqs.close();
 
-        return Solution.getInstance(ng, reqs, tAssigs.toArray(new TrafficAssignment[tAssigs.size()]));
+        return Solution.getInstance(pi, tAssigs.toArray(new TrafficAssignment[tAssigs.size()]));
     }
 }

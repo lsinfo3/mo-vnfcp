@@ -8,48 +8,61 @@
  */
 
 // PSA Config:
-s = 16
+s = 8
 m = 500
 tmax = 50
 tmin = 1
-rho = 0.85
+rho = 0.75
 
 // If runtime is set and > 0, the algorithm's execution time is set to that value (in seconds).
 // In that case, the parameter 'm' is ignored.
-runtime = 30
+runtime = 10
 
 numberOfTemperatureLevels = Math.ceil(Math.log(tmin / tmax) / Math.log(rho))
 
-// Base path for every input- and output-file:
-basePath = ""
-
 // PSA Input:
-// (Absolute paths won't be resolved against the basePath.)
+// Base path for every input-file:
+// (Absolute paths won't be resolved against the inBasePath.)
+inBasePath = "res/problem_instances/internet2"
 topologyFile = "topology"
 vnfLibFile = "vnfLib"
 requestsFile = "requests"
 
 // Output:
 // Comment out if the file is not needed.
-// (Absolute paths won't be resolved against the basePath.)
 // ---
 showGui = false
-paretoFrontier = "pareto_frontier" // CSV of pareto frontier (objective space)
-paretoFrontierDevObs = "psa_pareto_frontier_developement" // CSV of pareto frontier developement over time (objective space)
-results = "results" // human readable pareto frontier
-vnfLoads = "vnf_loads" // CSV of a single solution's VNF loads at every temperature level
-vnfDetails = "vnf_details" // Detailed CSV-overview of a single solution's VNF, including differences and node locations
-solutionSets = "solution_sets" // CSV of the solution set at every temperature change
+executionProgress = true
 
-placementNodes = "placement_nodes" // for each node: used resources, remaining resources, vnf list
-placementLinks = "placement_links" // for each link: used bandwidth, remaining bandwidth, flow list
-placementVnfs = "placement_vnfs" // for each vnf: load, used capacity, remaining capacity, flow list
-placementFlows = "placement_flows" // for each request: delay, route (list of nodes, NFs are applied at nodes in [brackets])
+// Base path for every output-file:
+// (Absolute paths won't be resolved against the outBasePath.)
+outBasePath = "/tmp/psa"
+// Main frontier:
+paretoFrontier = "psa_pareto_frontier" // CSV of pareto frontier (objective space)
+results = "psa_results" // human readable pareto frontier
+// Actual placement:
+placementNodes = "psa_placement_nodes" // for each node: used resources, remaining resources, vnf list
+placementLinks = "psa_placement_links" // for each link: used bandwidth, remaining bandwidth, flow list
+placementVnfs = "psa_placement_vnfs" // for each vnf: load, used capacity, remaining capacity, flow list
+placementFlows = "psa_placement_flows" // for each request: delay, route (list of nodes, NFs are applied at nodes in [brackets])
+// Decision Making:
+feasibleFrontier = "psa_feasible_frontier" // CSV of feasible pareto frontier (objective space, only feasible solutions)
+solutionOrder = "psa_order" // CSV with an ordered list of solution IDs for each rank/weight combination
+weightVectors = "psa_weights" // uniform, entropy, coeff and std weights for all objectives
+rankingVectors = "psa_rankings" // SAW, MEW, TOPSIS and VIKOR ranks for all solutions
+
+// Debug:
+//paretoFrontierDevObs = "psa_pareto_frontier_developement" // CSV of pareto frontier developement over time (objective space)
+//vnfLoads = "psa_vnf_loads" // CSV of a single solution's VNF loads at every temperature level
+//vnfDetails = "psa_vnf_details" // Detailed CSV-overview of a single solution's VNF, including differences and node locations
+//solutionSets = "psa_solution_sets" // CSV of the solution set at every temperature change
 
 // Method for retrieving the initial solution set:
-// Possible values: RAND, SHORT_PSA, LEAST_DELAY, LEAST_CPU
+// Possible values: RAND, SHORT_PSA, LEAST_DELAY, LEAST_CPU, EXISTING
 // (no quotation marks required)
-prepMode = LEAST_DELAY
+prepMode = EXISTING
+// If prepMode = EXISTING, provide a valid placement here ("placementFlows" file)
+existingPlacementFlows = outBasePath + "/prev_psa_placement_flows"
 
 /*
  Define objective vectors for determining dominance relationships.
@@ -74,7 +87,7 @@ prepMode = LEAST_DELAY
  - MEDIAN_DELAY_INDEX
  - MAX_DELAY_INDEX
  ---
- - TOTAL_NUMBER_OF_HOPS
+ - NUMBER_OF_HOPS
  - MEAN_HOPS_INDEX
  - MEDIAN_HOPS_INDEX
  - MAX_HOPS_INDEX
@@ -106,7 +119,7 @@ prepMode = LEAST_DELAY
 function objectiveVector(v) {
     return [
         v[TOTAL_DELAY],
-        v[TOTAL_NUMBER_OF_HOPS],
+        v[NUMBER_OF_HOPS],
         v[NUMBER_OF_VNF_INSTANCES],
         v[TOTAL_USED_CPU],
         v[TOTAL_USED_RAM],
@@ -126,16 +139,17 @@ function unfeasibleVector(v) {
 
 // Probability for replacing a VNF instance instead of a single flow:
 // The current temperature is stored in the variable 't'.
-// The variable 'i' contains the iteration number (0 <= i < numIterations).
-pmin = 0.0
-pmax = 1.0
+// The variable 'i' contains the iteration number (0 <= i < numberOfTemperatureLevels).
+pmin = 0.2
+pmax = 0.8
 i1 = 0.2 * numberOfTemperatureLevels
 i2 = 0.8 * numberOfTemperatureLevels
 pReassignVnf = (i2 - i)/(i2 - i1) * (pmax - pmin) + pmin
 pReassignVnf = Math.max(pmin, Math.min(pmax, pReassignVnf))
+//pReassignVnf = 1.0
 
 // Probability for creating new VNF instances while routing:
-pNewInstance = 0
+pNewInstance = pReassignVnf/2.0
 
 // Acceptance Probabilities:
 // The variables 'better' and 'incomp' contain the corresponding numbers of generated neighbour solutions

@@ -34,18 +34,23 @@ public class GreedyCentrality {
      * and might increase CPU usage.
      *
      * @param ng   The problem's (physical) network graph.
+     * @param lib  The VNF types library for this problem.
      * @param reqs All flow demands.
      * @return A (possibly unfeasible) Solution for the problem with minimum number of instances.
      */
-    public static Solution centrality(NetworkGraph ng, TrafficRequest[] reqs) {
+    public static Solution centrality(NetworkGraph ng, VnfLib lib, TrafficRequest[] reqs) {
         Objects.requireNonNull(ng);
         Objects.requireNonNull(reqs);
         HashMap<Node, HashMap<Node, Node.Att>> bp = ng.getDijkstraBackpointers();
         VnfLib vnfLib = null;
-        Node[] cpuNodes = ng.getNodes().values().stream().filter(n -> n.cpuCapacity > 0).toArray(Node[]::new);
+        Node[] cpuNodes = ng.getNodes().values().stream().filter(n -> n.resources[0] > 0).toArray(Node[]::new);
 
         // Create dummy node to compute the number of required instances for each type:
-        Node dummy = new Node("dummy", Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
+        double[] res = new double[lib.res.length];
+        for (int i = 0; i < res.length; i++) {
+            res[i] = Double.POSITIVE_INFINITY;
+        }
+        Node dummy = new Node("dummy", res);
         NodeOverview dummyOv = new NodeOverview(dummy);
         for (TrafficRequest req : reqs) {
             for (VNF vnf : req.vnfSequence) {
@@ -84,7 +89,7 @@ public class GreedyCentrality {
             for (VNF vnf : req.vnfSequence) {
                 HashMap<ObjectWeight<Node>, ObjectWeight<Node>> thisMap = nodeWeightSets.get(vnf);
                 for (NodeAssignment nAssig : tAssig.path) {
-                    if (nAssig.node.cpuCapacity > 0.0) {
+                    if (nAssig.node.resources[0] > 0.0) {
                         ObjectWeight<Node> thisNode = new ObjectWeight<>(nAssig.node, 0.0);
                         if (thisMap.containsKey(thisNode)) {
                             thisNode = thisMap.get(thisNode);
@@ -119,9 +124,12 @@ public class GreedyCentrality {
                 Optional<ObjectWeight<Node>> newLocOpt = weights.values().stream()
                         .filter(v -> {
                             double[] used = usedResources.get(v.content);
-                            return used[0] + vnf.cpuRequired <= v.content.cpuCapacity
-                                  && used[1] + vnf.ramRequired <= v.content.ramCapacity
-                                  && used[2] + vnf.hddRequired <= v.content.hddCapacity;
+                            for (int j = 0; j < used.length; j++) {
+                                if (used[j] + vnf.reqResources[j] > v.content.resources[j]) {
+                                    return false;
+                                }
+                            }
+                            return true;
                         })
                         .max(Comparator.comparingDouble(o1 -> o1.weight));
 
@@ -134,9 +142,9 @@ public class GreedyCentrality {
 
                 // Mark resources as used:
                 double[] used = usedResources.get(newLoc.content);
-                used[0] += vnf.cpuRequired;
-                used[1] += vnf.ramRequired;
-                used[2] += vnf.hddRequired;
+                for (int j = 0; j < used.length; j++) {
+                    used[j] += vnf.reqResources[j];
+                }
 
                 VnfInstances inst = new VnfInstances(newLoc.content, vnf, new double[1], null);
                 locationList.add(inst);
@@ -153,7 +161,7 @@ public class GreedyCentrality {
 
                     if (Arrays.stream(tAssig.path).anyMatch(n -> n.node.equals(newLoc.content))) {
                         IntStream.range(0, tAssig.path.length)
-                                .filter(n -> tAssig.path[n].node.cpuCapacity > 0.0)
+                                .filter(n -> tAssig.path[n].node.resources[0] > 0.0)
                                 .mapToObj(n -> weights.get(new ObjectWeight<>(tAssig.path[n].node, 0.0)))
                                 .forEach(w -> w.weight--);
                         it.remove();
@@ -169,9 +177,9 @@ public class GreedyCentrality {
             Node[] order = new Node[req.vnfSequence.length];
 
             // Create new graph for this request:
-            NetworkGraph ng2 = new NetworkGraph();
-            Node ingress = ng2.addNode("ingress", req.ingress.cpuCapacity, req.ingress.ramCapacity, req.ingress.hddCapacity);
-            Node egress = ng2.addNode("egress", req.egress.cpuCapacity, req.egress.ramCapacity, req.egress.hddCapacity);
+            NetworkGraph ng2 = new NetworkGraph(true);
+            Node ingress = ng2.addNode("ingress", req.ingress.resources);
+            Node egress = ng2.addNode("egress", req.egress.resources);
             LinkedList<Node> lastIteration = new LinkedList<>();
             lastIteration.add(ingress);
 
@@ -190,7 +198,7 @@ public class GreedyCentrality {
                 for (int j = 0; j < currentLocations.size(); j++) {
                     VnfInstances v = currentLocations.get(j);
                     if (v.loads[0] + req.bandwidthDemand <= v.type.processingCapacity) {
-                        currentIteration.add(ng2.addNode(o + "_" + j + "_" + v.node.name, v.node.cpuCapacity, v.node.ramCapacity, v.node.hddCapacity));
+                        currentIteration.add(ng2.addNode(o + "_" + j + "_" + v.node.name, v.node.resources));
                     }
                 }
 
@@ -198,10 +206,15 @@ public class GreedyCentrality {
                     // Bad luck at solving the bin-packing problem "by chance" -> take all still available nodes into account
                     for (Node n : ng.getNodes().values()) {
                         double[] used = usedResources.get(n);
-                        if (used[0] + currentVNF.cpuRequired <= n.cpuCapacity
-                                && used[1] + currentVNF.ramRequired <= n.ramCapacity
-                                && used[2] + currentVNF.hddRequired <= n.hddCapacity) {
-                            currentIteration.add(ng2.addNode("x_" + o + "_" + n.name, n.cpuCapacity, n.ramCapacity, n.hddCapacity));
+                        boolean itFits = true;
+                        for (int j = 0; j < used.length; j++) {
+                            if (used[j] + currentVNF.reqResources[j] > n.resources[j]) {
+                                itFits = false;
+                                break;
+                            }
+                        }
+                        if (itFits) {
+                            currentIteration.add(ng2.addNode("x_" + o + "_" + n.name, n.resources));
                         }
                     }
                 }
@@ -210,8 +223,8 @@ public class GreedyCentrality {
                     // If still no suitable location was found, ignore capacity constraints.
                     if (currentIteration.isEmpty()) {
                         for (Node n : ng.getNodes().values()) {
-                            if (n.cpuCapacity > 0.0) {
-                                currentIteration.add(ng2.addNode("x_" + o + "_" + n.name, n.cpuCapacity, n.ramCapacity, n.hddCapacity));
+                            if (n.resources[0] > 0.0) {
+                                currentIteration.add(ng2.addNode("x_" + o + "_" + n.name, n.resources));
                             }
                         }
                     }
@@ -229,7 +242,7 @@ public class GreedyCentrality {
 
                             double latency = bp.get(_n1).get(_n2).d;
                             if (pair == null || latency <= pair.latency) {
-                                ng2.addLinkDirected(n1, n2, Double.POSITIVE_INFINITY, latency);
+                                ng2.addLink(n1, n2, Double.POSITIVE_INFINITY, latency);
                                 currentIterationAfterFilter.add(n2);
                             }
                         }
@@ -256,7 +269,7 @@ public class GreedyCentrality {
             // Connect lastIteration to egress:
             for (Node n1 : lastIteration) {
                 Node _n1 = (order.length == 0 ? req.ingress : ng.getNodes().get(n1.name.split("_", 3)[2]));
-                ng2.addLinkDirected(n1, egress, Double.POSITIVE_INFINITY, bp.get(_n1).get(req.egress).d);
+                ng2.addLink(n1, egress, Double.POSITIVE_INFINITY, bp.get(_n1).get(req.egress).d);
             }
 
             // Get shortest path through the newly created graph:
@@ -281,9 +294,9 @@ public class GreedyCentrality {
                     locations.get(req.vnfSequence[o]).add(v);
 
                     double[] used = usedResources.get(n);
-                    used[0] += v.type.cpuRequired;
-                    used[1] += v.type.ramRequired;
-                    used[2] += v.type.hddRequired;
+                    for (int j = 0; j < used.length; j++) {
+                        used[j] += v.type.reqResources[j];
+                    }
                 }
 
                 v.loads[0] += req.bandwidthDemand;
@@ -292,6 +305,6 @@ public class GreedyCentrality {
             assigs[i] = FlowUtils.fromVnfSequence(req, order, ng, bp);
         }
 
-        return Solution.getInstance(ng, reqs, assigs);
+        return Solution.getInstance(new ProblemInstance(ng, lib, reqs, new Objs(lib.getResources())), assigs);
     }
 }

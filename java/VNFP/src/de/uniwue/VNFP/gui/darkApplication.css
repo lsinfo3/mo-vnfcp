@@ -1,0 +1,32 @@
+
+.root{
+    -fx-font-family: "Arial";
+        -fx-base: rgb(64,64,64);
+    -fx-background: rgb(64,64,64);
+
+
+}
+.detailBars{
+         -fx-stroke-width: 0.5;
+}
+.button{
+-fx-background-color:
+        linear-gradient(#f2f2f2, #d6d6d6),
+        linear-gradient(#fcfcfc 0%, #d9d9d9 20%, #d6d6d6 100%),
+        linear-gradient(#dddddd 0%, #f6f6f6 50%);
+    -fx-background-radius: 8,7,6;
+    -fx-background-insets: 0,1,2;
+    -fx-text-fill: black;
+
+}
+.table-view .table-column{
+-fx-text-fill: white;
+    -fx-background: rgb(64,64,64);
+}
+.circleCells{
+    -fx-fill-color: white;
+}
+.edges{
+-fx-fill-color: white;
+-fx-stroke-color: white;
+}

@@ -1,9 +1,12 @@
 package de.uniwue.VNFP.model;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import de.uniwue.VNFP.model.solution.VnfInstances;
+import de.uniwue.VNFP.util.Point;
 
 /**
  * Objects from this class represent points of presence in the network.
@@ -18,34 +21,40 @@ public class Node implements Comparable<Node> {
      */
     public final String name;
     /**
-     * Number of available CPU cores.
+     * Amount of available computational resources.
      */
-    public double cpuCapacity;
+    public double[] resources;
     /**
-     * Amount of available RAM (Mb).
+     * Relative position to display this node in a GUI. May be null if not available.
      */
-    public double ramCapacity;
-    /**
-     * Amount of available HDD capacities (Gb).
-     */
-    public double hddCapacity;
+    public Point geo;
 
-    private HashSet<Link> neighbours;
+    private HashSet<Link> neighbors;
+    private HashSet<Link> inNeighbors;
 
     /**
-     * Creates a new instance with the given contents.
+     * Creates a new instance with the given name and resources. This node will be created without geo coordinates.
      *
-     * @param name        Name / ID of this node.
-     * @param cpuCapacity Number of available CPU cores.
-     * @param ramCapacity Amount of available RAM (Mb).
-     * @param hddCapacity Amount of available HDD capacities (Gb).
+     * @param name      Name / ID of this node.
+     * @param resources Amount of available computational resources.
      */
-    public Node(String name, double cpuCapacity, double ramCapacity, double hddCapacity) {
+    public Node(String name, double[] resources) {
+        this(name, resources, null);
+    }
+
+    /**
+     * Creates a new instance with the given name, resources and geo coordinates.
+     *
+     * @param name      Name / ID of this node.
+     * @param resources Amount of available computational resources.
+     * @param geo       Relative position to display this node in a GUI.
+     */
+    public Node(String name, double[] resources, Point geo) {
         this.name = Objects.requireNonNull(name);
-        this.cpuCapacity = cpuCapacity;
-        this.ramCapacity = ramCapacity;
-        this.hddCapacity = hddCapacity;
-        neighbours = new HashSet<>();
+        this.resources = Objects.requireNonNull(Arrays.copyOf(resources, resources.length));
+        this.geo = geo;
+        neighbors = new HashSet<>();
+        inNeighbors = new HashSet<>();
     }
 
     /**
@@ -65,12 +74,15 @@ public class Node implements Comparable<Node> {
 
         Link link = new Link(this, neigh, bandwidth, delay);
 
-        if (neighbours.contains(link) || neigh.neighbours.contains(link)) {
+        if (neighbors.contains(link) || neigh.neighbors.contains(link)) {
             throw new IllegalArgumentException("link " + link.node1.name + " - " + link.node2.name + " added twice");
         }
 
-        neighbours.add(link);
-        neigh.neighbours.add(link);
+        neighbors.add(link);
+        neigh.neighbors.add(link);
+        inNeighbors.add(link);
+        neigh.inNeighbors.add(link);
+
         return link;
     }
 
@@ -91,11 +103,13 @@ public class Node implements Comparable<Node> {
 
         Link link = new Link(this, neigh, bandwidth, delay);
 
-        if (neighbours.contains(link)) {
+        if (neighbors.contains(link)) {
             throw new IllegalArgumentException("link " + link.node1.name + " -> " + link.node2.name + " added twice");
         }
 
-        neighbours.add(link);
+        neighbors.add(link);
+        neigh.inNeighbors.add(link);
+
         return link;
     }
 
@@ -104,8 +118,29 @@ public class Node implements Comparable<Node> {
      *
      * @return A HashSet with all neighbor nodes.
      */
-    public HashSet<Link> getNeighbours() {
-        return neighbours;
+    public HashSet<Link> getNeighbors() {
+        return neighbors;
+    }
+
+
+    /**
+     * Returns a set of all links that end in this node.
+     * Only makes sense in the directed (or full duplex) case.
+     *
+     * @return A HashSet with all links in the form of (*, this).
+     */
+    public HashSet<Link> getInLinks() {
+        return inNeighbors.stream().filter(l -> l.node2.equals(this)).collect(Collectors.toCollection(HashSet::new));
+    }
+
+    /**
+     * Returns a set of all links that start in this node.
+     * Only makes sense in the directed (or full duplex) case.
+     *
+     * @return A HashSet with all links in the form of (this, *).
+     */
+    public HashSet<Link> getOutLinks() {
+        return neighbors.stream().filter(l -> l.node1.equals(this)).collect(Collectors.toCollection(HashSet::new));
     }
 
     @Override
@@ -127,9 +162,8 @@ public class Node implements Comparable<Node> {
     public String toString() {
         return "Node{" +
                 "name='" + name + "'" +
-                ", cpuCapacity=" + cpuCapacity +
-                ", ramCapacity=" + ramCapacity +
-                ", hddCapacity=" + hddCapacity +
+                ", resources=" + Arrays.toString(resources) +
+                ", geo=" + geo +
                 '}';
     }
 

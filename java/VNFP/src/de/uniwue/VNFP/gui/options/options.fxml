@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Circle?>
+
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" minWidth="-Infinity" prefHeight="427.0" prefWidth="211.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label layoutX="10.0" layoutY="20.0" text="X-Axis" fx:id="xaxislable" />
+      <ComboBox layoutX="10.0" layoutY="35.0" prefWidth="180.0" fx:id="xaxis" />
+      <Label fx:id="yaxislable" layoutX="10.0" layoutY="70.0" text="Y-Axis" />
+      <ComboBox fx:id="yaxis" layoutX="10.0" layoutY="85.0" prefWidth="180.0" />
+      <Label fx:id="displayOptions" layoutX="10.0" layoutY="130.0" text="Label" />
+      <ComboBox fx:id="colorPicker" layoutX="10.0" layoutY="145.0" prefWidth="180.0" />
+      <Label fx:id="graphOptions" layoutX="10.0" layoutY="190.0" text="Label" />
+      <CheckBox fx:id="linkDetails" layoutX="10.0" layoutY="205.0" mnemonicParsing="false" text="Button" />
+      <Circle fill="DARKGREY" layoutX="32.0" layoutY="290.0" radius="18.0" />
+      <Circle fill="BLACK" layoutX="32.0" layoutY="330.0" radius="18.0" />
+      <Circle fill="BLACK" layoutX="32.0" layoutY="370.0" radius="18.0" />
+      <Label layoutX="61.0" layoutY="282.0" text="No Resources" />
+      <Label layoutX="61.0" layoutY="322.0" text="Resources Available" />
+      <Label layoutX="61.0" layoutY="362.0" text="VNF Instances Placed" />
+      <Circle fill="ORANGE" layoutX="32.0" layoutY="370.0" radius="9.0" />
+      <Label layoutX="10.0" layoutY="239.0" text="Graph Legend" />
+   </children>
+</AnchorPane>

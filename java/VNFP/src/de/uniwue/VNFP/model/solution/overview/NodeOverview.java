@@ -23,9 +23,7 @@ public class NodeOverview {
 
     private HashSet<NodeAssignment> assignments;
     private HashMap<VNF, VnfInstances> vnfInstances = null;
-    private double remainingCpu;
-    private double remainingRam;
-    private double remainingHdd;
+    private double[] remainingResources;
 
     /**
      * Creates a new instance.
@@ -35,6 +33,7 @@ public class NodeOverview {
     public NodeOverview(Node node) {
         this.node = Objects.requireNonNull(node);
         this.assignments = new HashSet<>();
+        this.remainingResources = Arrays.copyOf(node.resources, node.resources.length);
     }
 
     /**
@@ -71,45 +70,17 @@ public class NodeOverview {
     }
 
     /**
-     * Subtracts the used CPU cores from the available resources and returns the difference.
+     * Subtracts the used resources from the available ones and returns the difference.
      * Can be negative, which indicates that constraints are not satisfied.
      *
-     * @return Remaining CPU resources for this node.
+     * @return Remaining computational resources for this node.
      */
-    public double remainingCpu() {
+    public double[] remainingResources() {
         if (vnfInstances == null) {
             // This method also calculates remainingCpu:
             getVnfInstances();
         }
-        return remainingCpu;
-    }
-
-    /**
-     * Subtracts the used RAM cores from the available resources and returns the difference.
-     * Can be negative, which indicates that constraints are not satisfied.
-     *
-     * @return Remaining RAM resources for this node.
-     */
-    public double remainingRam() {
-        if (vnfInstances == null) {
-            // This method also calculates remainingCpu:
-            getVnfInstances();
-        }
-        return remainingRam;
-    }
-
-    /**
-     * Subtracts the used HDD cores from the available resources and returns the difference.
-     * Can be negative, which indicates that constraints are not satisfied.
-     *
-     * @return Remaining HDD resources for this node.
-     */
-    public double remainingHdd() {
-        if (vnfInstances == null) {
-            // This method also calculates remainingCpu:
-            getVnfInstances();
-        }
-        return remainingHdd;
+        return remainingResources;
     }
 
     /**
@@ -191,10 +162,11 @@ public class NodeOverview {
             // bins.size() equals the number of required instances.
             vnfInstances.put(entry.getKey(), new VnfInstances(node, entry.getKey(), bins, mappedRequests));
         }
-        // Also set remainingCpu & friends:
-        remainingCpu = node.cpuCapacity - vnfInstances.values().stream().mapToDouble(e -> e.loads.length * e.type.cpuRequired).sum();
-        remainingRam = node.ramCapacity - vnfInstances.values().stream().mapToDouble(e -> e.loads.length * e.type.ramRequired).sum();
-        remainingHdd = node.hddCapacity - vnfInstances.values().stream().mapToDouble(e -> e.loads.length * e.type.hddRequired).sum();
+        // Also set remainingResources:
+        for (int i = 0; i < remainingResources.length; i++) {
+            int finalI = i;
+            remainingResources[i] = node.resources[i] - vnfInstances.values().stream().mapToDouble(e -> e.loads.length * e.type.reqResources[finalI]).sum();
+        }
         return vnfInstances;
     }
 
@@ -210,9 +182,7 @@ public class NodeOverview {
         if (vnfInstances != null) {
             nOver.vnfInstances = new HashMap<>(vnfInstances);
         }
-        nOver.remainingCpu = remainingCpu;
-        nOver.remainingRam = remainingRam;
-        nOver.remainingHdd = remainingHdd;
+        nOver.remainingResources = remainingResources;
 
         return nOver;
     }

@@ -1,8 +1,8 @@
 package de.uniwue.VNFP.algo;
 
-import de.uniwue.VNFP.model.NetworkGraph;
-import de.uniwue.VNFP.model.Node;
-import de.uniwue.VNFP.model.TrafficRequest;
+import de.uniwue.VNFP.gui.Gui;
+import de.uniwue.VNFP.model.*;
+import de.uniwue.VNFP.model.factory.*;
 import de.uniwue.VNFP.model.log.Debugger;
 import de.uniwue.VNFP.model.log.PSAEventLogger;
 import de.uniwue.VNFP.model.solution.Solution;
@@ -10,12 +10,19 @@ import de.uniwue.VNFP.model.solution.TrafficAssignment;
 import de.uniwue.VNFP.model.solution.overview.NodeOverview;
 import de.uniwue.VNFP.util.Config;
 import de.uniwue.VNFP.model.solution.VnfInstances;
+import de.uniwue.VNFP.util.HashWrapper;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 /**
  * This class implements the main optimization procedure, inspired by PSA.
@@ -24,7 +31,10 @@ import java.util.concurrent.Future;
  */
 public class PSA {
     public final NetworkGraph ng;
+    public final VnfLib lib;
     public final TrafficRequest[] reqs;
+    public final ProblemInstance pi;
+
     public final int s;
     public final int m;
     public final double tmax;
@@ -41,8 +51,80 @@ public class PSA {
     private int[] incomparableNeighboursLastTemp;
     private int[] iterationsLastTemp;
 
+    private Solution[] initialSolutions;
+
+    /**
+     * Reads the configuration from the given path and executes one optimization run with these settings.
+     * If no config file is present when running this method, a new example file is created instead and the execution aborts.
+     *
+     * @param configPath The path towards the config javascript file. May be null for default path {@code "config.js"}.
+     * @return The resulting frontier of Pareto-optimal placements.
+     * @throws IOException          If reading the config failed.
+     * @throws ExecutionException   If errors during concurrency appear.
+     * @throws InterruptedException If errors during concurrency appear.
+     */
+    public static ParetoFrontier runPSA(String configPath) throws IOException, ExecutionException, InterruptedException {
+        // Initialize Config
+        if (configPath == null) {
+            configPath = "config.js";
+        }
+        if (!Files.exists(Paths.get(configPath))) {
+            System.out.println("Config file '" + configPath + "' not found.");
+            System.out.println("Creating default config file in:");
+            System.out.println(Paths.get(configPath).toAbsolutePath().toString());
+
+            Config.getInstance().writeConfig(new FileOutputStream(configPath));
+
+            System.out.println("... done. Please review the configuration and run this program again.");
+            return null;
+        }
+        else {
+            Config.getInstance(new FileInputStream(configPath));
+        }
+        Config c = Config.getInstance();
+
+        // Read input
+        VnfLib vnfLib = VnfLibReader.readFromFile(c.vnfLibFile);
+        NetworkGraph ng = TopologyFileReader.readFromFile(c.topologyFile, vnfLib);
+        TrafficRequest[] reqs = TrafficRequestsReader.readFromFile(c.requestsFile, ng, vnfLib);
+
+        // Initialize PSA object
+        PSA psa = new PSA(ng, vnfLib, reqs, c.s, c.m, c.tmax, c.tmin, c.rho, c.runtime);
+        c.createAllEventLoggers().forEach(psa::addEventLogger);
+
+        // Execute actual algorithm
+        ParetoFrontier front;
+        switch (Config.getInstance().prepMode) {
+            case LEAST_CPU:
+                front = psa.runPSAPrepCpu();
+                break;
+            case LEAST_DELAY:
+                front = psa.runPSAPrepDelay();
+                break;
+            case SHORT_PSA:
+                front = psa.runPSAPrepPSA();
+                break;
+            case EXISTING:
+                front = psa.runPSAExistingFrontier();
+                break;
+            default:
+                front = psa.runPSARand();
+        }
+
+        // Show gui, if required
+        if (Config.getInstance().showGui) {
+            //OldGuiApp.frontier = front;
+            //OldGuiApp.launch(OldGuiApp.class);
+            Gui.frontier = front;
+            Gui.launch(Gui.class);
+        }
+
+        return front;
+    }
+
     /**
      * Initializes a new PSA instance.
+     * Note: if you want to execute a simple PSA optimization, execute {@link PSA#runPSA} instead.
      *
      * @param ng      Network graph (problem specific input)
      * @param reqs    All traffic demands (problem specific input)
@@ -54,12 +136,13 @@ public class PSA {
      * @param runtime Optional parameter; sets the algorithms runtime to the given value, in seconds.
      *                If set (> 0), the parameter <code>m</code> will be ignored.
      */
-    public PSA(NetworkGraph ng, TrafficRequest[] reqs, int s, int m, double tmax, double tmin, double rho, double runtime) {
-        this(ng, reqs, s, m, tmax, tmin, rho, runtime, new Random().nextLong());
+    public PSA(NetworkGraph ng, VnfLib lib, TrafficRequest[] reqs, int s, int m, double tmax, double tmin, double rho, double runtime) {
+        this(ng, lib, reqs, s, m, tmax, tmin, rho, runtime, new Random().nextLong());
     }
 
     /**
      * Initializes a new PSA instance with the given seed.
+     * Note: if you want to execute a simple PSA optimization, execute {@link PSA#runPSA} instead.
      *
      * @param ng      Network graph (problem specific input)
      * @param reqs    All traffic demands (problem specific input)
@@ -72,9 +155,11 @@ public class PSA {
      *                If set (> 0), the parameter <code>m</code> will be ignored.
      * @param seed    Seed for the Random object.
      */
-    public PSA(NetworkGraph ng, TrafficRequest[] reqs, int s, int m, double tmax, double tmin, double rho, double runtime, long seed) {
+    public PSA(NetworkGraph ng, VnfLib lib, TrafficRequest[] reqs, int s, int m, double tmax, double tmin, double rho, double runtime, long seed) {
         this.ng = Objects.requireNonNull(ng);
+        this.lib = Objects.requireNonNull(lib);
         this.reqs = Objects.requireNonNull(reqs);
+        this.pi = new ProblemInstance(ng, lib, reqs, new Objs(lib.getResources()), null);
         this.s = s;
         this.m = m;
         this.tmax = tmax;
@@ -106,6 +191,38 @@ public class PSA {
 
     /**
      * Applies (modified) Pareto-Simulated Annealing and attempts to approximate the Pareto Frontier.
+     * Starts with an existing placement and attempts to improve it.
+     *
+     * @return Pareto Frontier of all visited solutions.
+     */
+    public ParetoFrontier runPSAExistingFrontier() throws InterruptedException, ExecutionException, IOException {
+        ParetoFrontier front = IncompleteFlowPlacementReader.readFromCsv(pi, Config.getInstance().existingPlacementFlows);
+        Solution[] solutions = front.toArray(new Solution[front.size()]);
+
+        // Sort stuff to match indices
+        Arrays.sort(reqs, Comparator.comparing(req -> (req.ingress.name + "," + req.egress.name + "," + Arrays.stream(req.vnfSequence).map(v -> v.name).collect(Collectors.joining(",")))));
+        for (Solution s : solutions) {
+            Arrays.sort(s.requests, Comparator.comparing(req -> (req.ingress.name + "," + req.egress.name + "," + Arrays.stream(req.vnfSequence).map(v -> v.name).collect(Collectors.joining(",")))));
+            Arrays.sort(s.assignments, Comparator.comparing(assig -> (assig.request.ingress.name + "," + assig.request.egress.name + "," + Arrays.stream(assig.request.vnfSequence).map(v -> v.name).collect(Collectors.joining(",")))));
+        }
+
+        initialSolutions = Arrays.copyOf(solutions, solutions.length);
+        for (Solution s : solutions) {
+            s.pi.initialSolutions = initialSolutions;
+        }
+
+        // Compute solutions for the remaining traffic requests
+        HashSet<HashWrapper> coveredReqs = Arrays.stream(solutions[0].requests).map(HashWrapper::new).collect(Collectors.toCollection(HashSet::new));
+        TrafficRequest[] missingReqs = Arrays.stream(reqs).filter(r -> !coveredReqs.contains(new HashWrapper(r))).toArray(TrafficRequest[]::new);
+        for (int i = 0; i < solutions.length; i++) {
+            solutions[i] = NeighbourSelection.viterbiSelection(missingReqs, solutions[i], Config.getInstance().pNewInstance(tmax, 0), r);
+        }
+
+        return runPSA(solutions);
+    }
+
+    /**
+     * Applies (modified) Pareto-Simulated Annealing and attempts to approximate the Pareto Frontier.
      * Picks random initial solutions.
      *
      * @return Pareto Frontier of all visited solutions.
@@ -118,7 +235,7 @@ public class PSA {
         if (s == 0) return new ParetoFrontier();
         Solution[] solutions = new Solution[s];
         for (int i = 0; i < s; i++) {
-            solutions[i] = NeighbourSelection.randomSelection(reqs, Solution.createEmptyInstance(ng), r);
+            solutions[i] = NeighbourSelection.randomSelection(reqs, Solution.createEmptyInstance(pi), r);
         }
 
         return runPSA(solutions);
@@ -133,7 +250,7 @@ public class PSA {
     public ParetoFrontier runPSAPrepPSA() throws InterruptedException, ExecutionException {
         if (s == 0) return new ParetoFrontier();
 
-        PSA preRun = new PSA(ng, reqs, s / 4, m / 4, tmax, tmin, rho * rho, runtime / 4, r.nextLong());
+        PSA preRun = new PSA(ng, lib, reqs, s / 4, m / 4, tmax, tmin, rho * rho, runtime / 4, r.nextLong());
         ArrayList<Solution> start = preRun.runPSARand();
 
         // Obtain s solutions from the prior Pareto Frontier:
@@ -154,7 +271,7 @@ public class PSA {
      */
     public ParetoFrontier runPSAPrepDelay() throws InterruptedException, ExecutionException {
         HashMap<Node, HashMap<Node, Node.Att>> bp = ng.getDijkstraBackpointers();
-        Node[] cpuNodes = ng.getNodes().values().stream().filter(n -> n.cpuCapacity > 0.0).toArray(Node[]::new);
+        Node[] cpuNodes = ng.getNodes().values().stream().filter(n -> n.resources[0] > 0.0).toArray(Node[]::new);
         Solution[] solutions = new Solution[s];
 
         for (int k = 0; k < s; k++) {
@@ -171,7 +288,7 @@ public class PSA {
                 HashMap<Node, Node.Att> fromIngress = bp.get(req.ingress);
                 Node.Att c = fromIngress.get(middle);
                 do {
-                    if (c.node.cpuCapacity > 0.0) {
+                    if (c.node.resources[0] > 0.0) {
                         onPath.add(c.node);
                     }
                     c = (c.pi == null ? null : fromIngress.get(c.pi.getOther(c.node)));
@@ -180,7 +297,7 @@ public class PSA {
                 HashMap<Node, Node.Att> fromMiddle = bp.get(middle);
                 c = fromMiddle.get(req.egress);
                 while (!c.node.equals(middle)) {
-                    if (c.node.cpuCapacity > 0.0) {
+                    if (c.node.resources[0] > 0.0) {
                         onPath.add(c.node);
                     }
                     c = (c.pi == null ? null : fromMiddle.get(c.pi.getOther(c.node)));
@@ -199,7 +316,7 @@ public class PSA {
                 assig[i] = FlowUtils.fromVnfSequence(req, order, ng, bp);
             }
 
-            solutions[k] = Solution.getInstance(ng, reqs, assig);
+            solutions[k] = Solution.getInstance(pi, assig);
         }
 
         return runPSA(solutions);
@@ -213,7 +330,7 @@ public class PSA {
      * @return pareto frontier of all encountered solutions
      */
     public ParetoFrontier runPSAPrepCpu() throws InterruptedException, ExecutionException {
-        Solution sol = GreedyCentrality.centrality(ng, reqs);
+        Solution sol = GreedyCentrality.centrality(ng, lib, reqs);
         Solution[] solutions = new Solution[s];
         Arrays.fill(solutions, sol);
 
@@ -245,7 +362,7 @@ public class PSA {
 
         // Prepare acceptance probabilities by running one iteration silently:
         if (dominatingNeighboursLastTemp == null) {
-            PSA preRun = new PSA(ng, reqs, 1, Math.min(m, 100), tmax, tmin, 0.0, Math.min(runtime, 10.0), r.nextLong());
+            PSA preRun = new PSA(ng, lib, reqs, 1, Math.min(m, 100), tmax, tmin, 0.0, Math.min(runtime, 10.0), r.nextLong());
             preRun.dominatingNeighboursLastTemp = new int[]{Math.min(m/2, 50)};
             preRun.incomparableNeighboursLastTemp = new int[]{Math.min(m/2, 50)};
             preRun.iterationsLastTemp = new int[]{Math.min(m, 100)};
@@ -268,7 +385,7 @@ public class PSA {
             paretoFrontiers[i] = paretoFrontier.copy();
         }
 
-        // Multithreading tests!! ...
+        // Multithreading!!
         int threads = Runtime.getRuntime().availableProcessors();
         ExecutorService service = Executors.newFixedThreadPool(threads);
         ArrayList<Future<?>> futures = new ArrayList<>((int) Math.ceil((double) s / solutionBatchSize));
@@ -418,6 +535,7 @@ public class PSA {
             double acceptanceRatio = (double) Arrays.stream(acceptedNeighbours).sum() / (totalNumOfNeighbours[0]);
             for (PSAEventLogger logger : loggers) {
                 logger.endTemperatureIteration(t, iterationNumber, paretoFrontier.copy(), solutions,
+                        "visited=" + totalNumOfNeighbours[0],
                         "pReassignVnf=" + pReassignVnf,
                         "acceptanceRatio=" + acceptanceRatio);
             }

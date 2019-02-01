@@ -12,7 +12,10 @@ import de.uniwue.VNFP.model.solution.overview.VnfTypeOverview;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Arrays;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Epic class for epic things.
@@ -55,20 +58,16 @@ public class PlacementExporter implements PSAEventLogger {
         try {
             // Nodes
             if (nodeOvW != null) {
-                nodeOvW.write("solutionNumber;nodeName;usedCpu;usedRam;usedHdd;remainingCpu;remainingRam;remainingHdd;vnfList");
+                nodeOvW.write("solutionNumber;nodeName;usedResources;remainingResources;vnfList");
 
                 for (int i = 0; i < paretoFrontier.size(); i++) {
                     Solution s = paretoFrontier.get(i);
 
                     for (NodeOverview nodeOv : s.nodeMap.values()) {
-                        nodeOvW.write(String.format("\n%d;%s;%.2f;%.2f;%.2f;%.2f;%.2f;%.2f;",
+                        nodeOvW.write(String.format("\n%d;%s;%s;%s;",
                                 i, nodeOv.node.name,
-                                nodeOv.node.cpuCapacity - nodeOv.remainingCpu(),
-                                nodeOv.node.ramCapacity - nodeOv.remainingRam(),
-                                nodeOv.node.hddCapacity - nodeOv.remainingHdd(),
-                                nodeOv.remainingCpu(),
-                                nodeOv.remainingRam(),
-                                nodeOv.remainingHdd()));
+                                IntStream.range(0, nodeOv.node.resources.length).mapToObj(d -> "" + (nodeOv.node.resources[d] - nodeOv.remainingResources()[d])).collect(Collectors.joining(",")),
+                                Arrays.stream(nodeOv.remainingResources()).mapToObj(d -> ""+d).collect(Collectors.joining(","))));
 
                         String sep = "";
                         for (VnfInstances v : nodeOv.getVnfInstances().values()) {
@@ -156,7 +155,7 @@ public class PlacementExporter implements PSAEventLogger {
 
             // Flows
             if (requestOvW != null) {
-                requestOvW.write("solutionNumber;flowID;ingress;egress;delay;route");
+                requestOvW.write("solutionNumber;flowID;ingress;egress;delay;vnfs;route");
 
                 for (int i = 0; i < paretoFrontier.size(); i++) {
                     Solution s = paretoFrontier.get(i);
@@ -167,6 +166,11 @@ public class PlacementExporter implements PSAEventLogger {
                                 assig.request.ingress.name, assig.request.egress.name,
                                 assig.delay));
 
+                        // vnfs
+                        requestOvW.write(Arrays.stream(assig.request.vnfSequence).map(v -> v.name).collect(Collectors.joining(",")));
+                        requestOvW.write(";");
+
+                        // route
                         String sep = "";
                         for (NodeAssignment n : assig.path) {
                             requestOvW.write(sep);

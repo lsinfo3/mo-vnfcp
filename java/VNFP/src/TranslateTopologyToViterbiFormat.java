@@ -1,6 +1,4 @@
-import de.uniwue.VNFP.model.NetworkGraph;
-import de.uniwue.VNFP.model.TrafficRequest;
-import de.uniwue.VNFP.model.VnfLib;
+import de.uniwue.VNFP.model.*;
 import de.uniwue.VNFP.model.factory.TopologyFileReader;
 import de.uniwue.VNFP.model.factory.TrafficRequestsReader;
 import de.uniwue.VNFP.model.factory.ViterbiSolutionReader;
@@ -200,11 +198,12 @@ public class TranslateTopologyToViterbiFormat {
                         String input_requests = f3.toPath().resolve("requests-fixed-psa").toAbsolutePath().toString();
                         String input_viterbi = moveTo.toString();
 
-                        NetworkGraph ng = TopologyFileReader.readFromFile(input_topology);
                         VnfLib vnfLib = VnfLibReader.readFromFile(input_vnfs);
+                        NetworkGraph ng = TopologyFileReader.readFromFile(input_topology, vnfLib);
                         TrafficRequest[] reqs = TrafficRequestsReader.readFromFile(input_requests, ng, vnfLib);
+                        ProblemInstance pi = new ProblemInstance(ng, vnfLib, reqs, new Objs(vnfLib.getResources()));
 
-                        Solution s = ViterbiSolutionReader.readFromCsv(ng, reqs, input_viterbi);
+                        Solution s = ViterbiSolutionReader.readFromCsv(pi, input_viterbi);
                         String[] csv = s.toStringCsv();
                         BufferedWriter w = Files.newBufferedWriter(Paths.get(f3.getAbsolutePath() + "/pareto_frontier_viterbi"));
                         w.write(csv[0] + "\n");

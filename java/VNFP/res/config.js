@@ -8,7 +8,7 @@
  */
 
 // PSA Config:
-s = 4
+s = 8
 m = 500
 tmax = 50
 tmin = 1
@@ -16,48 +16,53 @@ rho = 0.75
 
 // If runtime is set and > 0, the algorithm's execution time is set to that value (in seconds).
 // In that case, the parameter 'm' is ignored.
-runtime = 5
+runtime = 10
 
 numberOfTemperatureLevels = Math.ceil(Math.log(tmin / tmax) / Math.log(rho))
 
-// Base path for every input- and output-file:
-basePath = "res/problem_instances/BCAB15"
-
 // PSA Input:
-// (Absolute paths won't be resolved against the basePath.)
-topologyFile = "outTopo"
-vnfLibFile = "outVnfs"
-requestsFile = "outReqs"
+// Base path for every input-file:
+// (Absolute paths won't be resolved against the inBasePath.)
+inBasePath = "res/problem_instances/internet2"
+topologyFile = "topology"
+vnfLibFile = "vnfLib"
+requestsFile = "requests"
 
 // Output:
 // Comment out if the file is not needed.
-// (Absolute paths won't be resolved against the basePath.)
 // ---
-showGui = false
+showGui = true
 executionProgress = true
-baseFolder = "/tmp/psa/"
-//baseFolder = "/home/alex/w/MA/eval/frontVerlauf/" + new Date().getTime() + "/"
 
+// Base path for every output-file:
+// (Absolute paths won't be resolved against the outBasePath.)
+outBasePath = "/tmp/psa"
 // Main frontier:
-paretoFrontier = baseFolder + "psa_pareto_frontier" // CSV of pareto frontier (objective space)
-results = baseFolder + "psa_results" // human readable pareto frontier
-
+paretoFrontier = "psa_pareto_frontier" // CSV of pareto frontier (objective space)
+results = "psa_results" // human readable pareto frontier
 // Actual placement:
-placementNodes = baseFolder + "psa_placement_nodes" // for each node: used resources, remaining resources, vnf list
-placementLinks = baseFolder + "psa_placement_links" // for each link: used bandwidth, remaining bandwidth, flow list
-placementVnfs = baseFolder + "psa_placement_vnfs" // for each vnf: load, used capacity, remaining capacity, flow list
-placementFlows = baseFolder + "psa_placement_flows" // for each request: delay, route (list of nodes, NFs are applied at nodes in [brackets])
+placementNodes = "psa_placement_nodes" // for each node: used resources, remaining resources, vnf list
+placementLinks = "psa_placement_links" // for each link: used bandwidth, remaining bandwidth, flow list
+placementVnfs = "psa_placement_vnfs" // for each vnf: load, used capacity, remaining capacity, flow list
+placementFlows = "psa_placement_flows" // for each request: delay, route (list of nodes, NFs are applied at nodes in [brackets])
+// Decision Making:
+feasibleFrontier = "psa_feasible_frontier" // CSV of feasible pareto frontier (objective space, only feasible solutions)
+solutionOrder = "psa_order" // CSV with an ordered list of solution IDs for each rank/weight combination
+weightVectors = "psa_weights" // uniform, entropy, coeff and std weights for all objectives
+rankingVectors = "psa_rankings" // SAW, MEW, TOPSIS and VIKOR ranks for all solutions
 
 // Debug:
-//paretoFrontierDevObs = baseFolder + "psa_pareto_frontier_developement" // CSV of pareto frontier developement over time (objective space)
-//vnfLoads = baseFolder + "psa_vnf_loads" // CSV of a single solution's VNF loads at every temperature level
-//vnfDetails = baseFolder + "psa_vnf_details" // Detailed CSV-overview of a single solution's VNF, including differences and node locations
-//solutionSets = baseFolder + "psa_solution_sets" // CSV of the solution set at every temperature change
+//paretoFrontierDevObs = "psa_pareto_frontier_developement" // CSV of pareto frontier developement over time (objective space)
+//vnfLoads = "psa_vnf_loads" // CSV of a single solution's VNF loads at every temperature level
+//vnfDetails = "psa_vnf_details" // Detailed CSV-overview of a single solution's VNF, including differences and node locations
+//solutionSets = "psa_solution_sets" // CSV of the solution set at every temperature change
 
 // Method for retrieving the initial solution set:
-// Possible values: RAND, SHORT_PSA, LEAST_DELAY, LEAST_CPU
+// Possible values: RAND, SHORT_PSA, LEAST_DELAY, LEAST_CPU, EXISTING
 // (no quotation marks required)
-prepMode = RAND
+prepMode = LEAST_DELAY
+// If prepMode = EXISTING, provide a valid placement here ("placementFlows" file)
+existingPlacementFlows = outBasePath + "/prev_psa_placement_flows"
 
 /*
  Define objective vectors for determining dominance relationships.
@@ -82,15 +87,23 @@ prepMode = RAND
  - MEDIAN_DELAY_INDEX
  - MAX_DELAY_INDEX
  ---
- - TOTAL_NUMBER_OF_HOPS
+ - NUMBER_OF_HOPS
  - MEAN_HOPS_INDEX
  - MEDIAN_HOPS_INDEX
  - MAX_HOPS_INDEX
 
+ Migrations:
+ - NUMBER_OF_VNF_REPLACEMENTS
+ - TOTAL_FLOW_MIGRATION_PENALTY
+
  Node resources:
- - TOTAL_USED_CPU
- - TOTAL_USED_RAM
- - TOTAL_USED_HDD
+ - TOTAL_USED_RESOURCES[0]
+ - TOTAL_USED_RESOURCES[1]
+ - TOTAL_USED_RESOURCES[2]
+ - ...
+ They can also be called by their name from the VnfLib:
+ If you have defined a resource called "cpu", use:
+ - TOTAL_USED_RESOURCE_CPU
 
  VNF instance resources:
  - TOTAL_ROOTED_VNF_LOADS
@@ -103,9 +116,7 @@ prepMode = RAND
  'EXCESSIVE' refers to VNF types with more instances than permitted.
  - UNFEASIBLE
  - NUMBER_OF_DELAY_VIOLATIONS
- - NUMBER_OF_CPU_VIOLATIONS
- - NUMBER_OF_RAM_VIOLATIONS
- - NUMBER_OF_HDD_VIOLATIONS
+ - NUMBER_OF_RESOURCE_VIOLATIONS
  - NUMBER_OF_EXCESSIVE_VNFS
  - NUMBER_OF_CONGESTED_LINKS
  - TOTAL_OVERLOADED_VNF_CAPACITY
@@ -113,14 +124,10 @@ prepMode = RAND
  */
 function objectiveVector(v) {
     return [
-        /*v[TOTAL_DELAY],
-        v[TOTAL_NUMBER_OF_HOPS],
-        v[NUMBER_OF_VNF_INSTANCES],
-        v[TOTAL_USED_CPU],
-        v[TOTAL_USED_RAM],
-        v[TOTAL_USED_HDD]*/
-        v[TOTAL_NUMBER_OF_HOPS],
+        v[MEAN_DELAY_INDEX],
+        v[TOTAL_USED_RESOURCE_CPU],
         v[NUMBER_OF_VNF_INSTANCES]
+        //v[TOTAL_FLOW_MIGRATION_PENALTY]
     ]
 }
 function unfeasibleVector(v) {
@@ -128,7 +135,7 @@ function unfeasibleVector(v) {
         v[MEAN_DELAY_INDEX],
         v[MEAN_HOPS_INDEX],
         v[MEAN_INVERSE_LOAD_INDEX],
-        v[NUMBER_OF_DELAY_VIOLATIONS] + v[NUMBER_OF_CPU_VIOLATIONS] + v[NUMBER_OF_RAM_VIOLATIONS] + v[NUMBER_OF_HDD_VIOLATIONS] + v[NUMBER_OF_CONGESTED_LINKS],
+        v[NUMBER_OF_DELAY_VIOLATIONS] + v[NUMBER_OF_RESOURCE_VIOLATIONS] + v[NUMBER_OF_CONGESTED_LINKS],
         v[TOTAL_OVERLOADED_VNF_CAPACITY],
         v[TOTAL_ROOTED_EXCESSIVE_VNF_CAPACITY]
     ]
@@ -143,7 +150,7 @@ i1 = 0.2 * numberOfTemperatureLevels
 i2 = 0.8 * numberOfTemperatureLevels
 pReassignVnf = (i2 - i)/(i2 - i1) * (pmax - pmin) + pmin
 pReassignVnf = Math.max(pmin, Math.min(pmax, pReassignVnf))
-//pReassignVnf = 0.2
+//pReassignVnf = 1.0
 
 // Probability for creating new VNF instances while routing:
 pNewInstance = pReassignVnf/2.0

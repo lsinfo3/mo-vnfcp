@@ -1,5 +1,6 @@
 package de.uniwue.VNFP.algo;
 
+import de.uniwue.VNFP.model.Objs;
 import de.uniwue.VNFP.model.solution.Solution;
 
 import java.util.ArrayList;
@@ -107,15 +108,16 @@ public class ParetoFrontier extends ArrayList<Solution> {
      * otherwise, an ArrayList with all removed points is returned.
      */
     public ArrayList<Solution> updateParetoFrontier(Solution newSolution) {
+        Objs o = newSolution.obj;
         double[] newVector = newSolution.getObjectiveVector();
         newVector = Arrays.copyOf(newVector, newVector.length + 1);
-        newVector[newVector.length - 1] = newSolution.vals[Solution.Vals.UNFEASIBLE.i];
+        newVector[newVector.length - 1] = newSolution.vals[o.UNFEASIBLE.i];
         ArrayList<Solution> removed = new ArrayList<>();
         int i = 0;
         while (i < size()) {
             double[] iVector = get(i).getObjectiveVector();
             iVector = Arrays.copyOf(iVector, iVector.length + 1);
-            iVector[iVector.length - 1] = get(i).vals[Solution.Vals.UNFEASIBLE.i];
+            iVector[iVector.length - 1] = get(i).vals[o.UNFEASIBLE.i];
             int dominance = getDominance(iVector, newVector);
             //if (newSolution.isFeasible() && !get(i).isFeasible()) dominance = +1;
             //if (!newSolution.isFeasible() && get(i).isFeasible()) dominance = -1;
@@ -257,6 +259,21 @@ public class ParetoFrontier extends ArrayList<Solution> {
         ParetoFrontier ret = new ParetoFrontier(this);
         ret.min = min;
         ret.max = max;
+        return ret;
+    }
+
+    /**
+     * Returns a subset of this ParetoFrontier containing only feasible solutions.
+     *
+     * @return All feasible solutions of this frontier.
+     */
+    public ParetoFrontier feasibleSubfront() {
+        ParetoFrontier ret = new ParetoFrontier();
+        for (Solution s : this) {
+            if (s.isFeasible()) {
+                ret.updateParetoFrontier(s);
+            }
+        }
         return ret;
     }
 }
