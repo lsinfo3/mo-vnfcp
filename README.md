@@ -18,7 +18,10 @@ or simply run the jar file contained in the [artifacts](java/VNFP/out/artifacts/
 Its first execution should create a default config file [config.js](java/VNFP/resources/config.js) in your current working directory.
 
 If you are using OpenJDK with the open source JavaFX implementation, you may need to add the OpenJFX libraries to your module dependencies.
-In addition, executing classes other than `Main` may require the following Java VM arguments: `--module-path <PATH TO YOUR OPENJFX LIBS> --add-modules=javafx.controls --add-exports=javafx.graphics/com.sun.javafx.util=ALL-UNNAMED --add-exports=javafx.base/com.sun.javafx.reflect=ALL-UNNAMED --add-exports=javafx.base/com.sun.javafx.beans=ALL-UNNAMED --add-exports=javafx.graphics/com.sun.glass.utils=ALL-UNNAMED --add-exports=javafx.graphics/com.sun.javafx.tk=ALL-UNNAMED`.
+In addition, executing classes other than `Main` may require the following Java VM arguments:
+```
+--module-path <PATH TO YOUR OPENJFX LIBS> --add-modules=javafx.controls --add-exports=javafx.graphics/com.sun.javafx.util=ALL-UNNAMED --add-exports=javafx.base/com.sun.javafx.reflect=ALL-UNNAMED --add-exports=javafx.base/com.sun.javafx.beans=ALL-UNNAMED --add-exports=javafx.graphics/com.sun.glass.utils=ALL-UNNAMED --add-exports=javafx.graphics/com.sun.javafx.tk=ALL-UNNAMED
+```
 Executing `Main` requires a valid path to a config file as first program argument.
 Using the configuration from [res/config.js](java/VNFP/res/config.js) should run a quick optimization and directly display its results in the graphical user interface.
 
