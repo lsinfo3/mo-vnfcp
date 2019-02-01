@@ -13,7 +13,7 @@ Some functions require the JavaFX Runtime, which should be included in JDK bundl
 # Execution
 You can either load the source code in a Java IDE of your choice and run the respective classes directly,
 or simply run the jar file contained in the [artifacts](java/VNFP/out/artifacts/VNFP_jar) folder.
-Its first execution should create a default config file `config.js` in your current working directory.
+Its first execution should create a default config file [config.js](java/VNFP/resources/config.js) in your current working directory.
 Adjust its contents accordingly, for example:
 - Set the `basePath` to a valid problem instance, for example contained in `java/VNFP/res/problem_instances/BCAB15`.
 - Adjust the `runtime` for faster testing.
